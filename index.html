@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comic Pur - Free Hindi Webtoons</title>
+  <style>
+    :root{--p:#ff2e63;--d:#0a0a0a;--g:#111;--t:#ddd;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',Arial;background:var(--d);color:var(--t);}
+    
+    header{background:#000;padding:1rem;position:sticky;top:0;z-index:999;border-bottom:2px solid var(--p);}
+    .nav{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
+    .logo{font-size:2.6rem;color:var(--p);font-weight:bold;}
+    .search input{background:#222;border:none;padding:12px 20px;border-radius:50px;width:350px;color:white;}
+    
+    .slider{position:relative;height:70vh;overflow:hidden;}
+    .slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:1.5s;}
+    .slide.active{opacity:1;}
+    .overlay{position:absolute;bottom:0;left:0;right:0;padding:3rem;background:linear-gradient(transparent,#0009);text-align:center;color:white;}
+    .overlay h1{font-size:3.2rem;}
+    .btn{background:var(--p);color:white;padding:14px 40px;border-radius:50px;display:inline-block;margin-top:1rem;font-weight:bold;}
+    
+    .genres{text-align:center;margin:2rem 0;}
+    .genres button{background:#222;border:none;padding:10px 20px;margin:5px;border-radius:30px;color:white;cursor:pointer;}
+    .genres button:hover{background:var(--p);}
+    
+    section{padding:2rem 1rem;max-width:1400px;margin:0 auto;}
+    h2{color:var(--p);text-align:center;font-size:2.3rem;margin:2rem 0;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:1.8rem;}
+    .card{position:relative;border-radius:16px;overflow:hidden;transition:0.4s;cursor:pointer;background:var(--g);}
+    .card:hover{transform:translateY(-15px);box-shadow:0 25px 50px rgba(255,46,99,0.5);}
+    .card img{width:100%;height:270px;object-fit:cover;}
+    .info{padding:1rem;text-align:center;}
+    .title{font-weight:600;}
+    .ch{background:var(--p);padding:5px 12px;border-radius:20px;}
+    .new{position:absolute;top:10px;right:10px;background:#ff2e63;padding:5px 12px;border-radius:10px;font-weight:bold;}
+    .rank{position:absolute;top:10px;left:10px;background:var(--p);color:white;width:45px;height:45px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:bold;}
+    
+    #searchResults{display:none;margin-top:1rem;}
+    .search-result{padding:10px;background:#222;margin:5px 0;border-radius:8px;}
+    
+    @media(max-width:768px){
+      .search input{width:100%;margin-top:1rem;}
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav">
+      <div class="logo">Comic Pur</div>
+      <div class="search">
+        <input type="text" id="searchInput" placeholder="Search comics..." oninput="searchComics()">
+      </div>
+    </div>
+  </header>
+
+  <div class="slider">
+    <div class="slide active" style="background-image:url('https://files.catbox.moe/a5csgr.jpg')">
+      <div class="overlay">
+        <h1>Mera Jalwa Tumhara Karma</h1>
+        <p>Chapter 1 • New Release</p>
+        <a href="comics/mera-jalwa-tumhara-karma/ch1.html" class="btn">Read Now</a>
+      </div>
+    </div>
+    <!-- Add more slides by copying div and changing background-image -->
+  </div>
+
+  <div class="genres">
+    <button onclick="filterComics('all')">ALL</button>
+    <button onclick="filterComics('romance')">ROMANCE</button>
+    <button onclick="filterComics('drama')">DRAMA</button>
+    <button onclick="filterComics('mature')">MATURE</button>
+  </div>
+
+  <section>
+    <h2>Latest Updates</h2>
+    <div id="latestGrid" class="grid">
+      <!-- Loaded from JSON -->
+    </div>
+  </section>
+
+  <section style="background:#111;">
+    <h2>Most Viewed</h2>
+    <div id="mostViewedGrid" class="grid">
+      <!-- Loaded from JSON -->
+    </div>
+  </section>
+
+  <a href="all-comics.html" style="display:block;text-align:center;margin:2rem 0;color:var(--p);font-size:1.5rem;">View All Comics</a>
+
+  <div id="searchResults"></div>
+
+  <script>
+    // Load comics from JSON
+    fetch('data/comics.json')
+      .then(response => response.json())
+      .then(data => {
+        loadComics(data.comics, 'latestGrid', 'latest');
+        loadComics(data.comics.sort((a, b) => b.views - a.views), 'mostViewedGrid', 'mostViewed');
+      });
+
+    function loadComics(comics, container, type) {
+      const grid = document.getElementById(container);
+      grid.innerHTML = '';
+      comics.slice(0, 10).forEach((comic, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <a href="comics/${comic.slug}/index.html">
+            <span class="new">NEW</span>
+            <img src="\( {comic.cover}" alt=" \){comic.title}">
+            <div class="info">
+              <div class="title">${comic.title}</div>
+              <span class="ch">${comic.latest}</span>
+            </div>
+          </a>
+        `;
+        if (type === 'mostViewed') {
+          card.innerHTML = card.innerHTML.replace('<span class="new">NEW</span>', `<div class="rank">${index + 1}</div>`);
+        }
+        grid.appendChild(card);
+      });
+    }
+
+    function searchComics() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const results = document.getElementById('searchResults');
+      if (query.length < 2) {
+        results.style.display = 'none';
+        return;
+      }
+      fetch('data/comics.json')
+        .then(response => response.json())
+        .then(data => {
+          const matches = data.comics.filter(comic => comic.title.toLowerCase().includes(query));
+          results.innerHTML = matches.map(comic => `<div class="search-result"><a href="comics/\( {comic.slug}/index.html"> \){comic.title}</a></div>`).join('');
+          results.style.display = matches.length > 0 ? 'block' : 'none';
+        });
+    }
+
+    function filterComics(genre) {
+      fetch('data/comics.json')
+        .then(response => response.json())
+        .then(data => {
+          let filtered = data.comics;
+          if (genre !== 'all') filtered = filtered.filter(comic => comic.genre.toLowerCase() === genre);
+          loadComics(filtered, 'latestGrid', 'latest');
+        });
+    }
+
+    // Auto Slider
+    setInterval(() => {
+      let curr = document.querySelector('.slide.active');
+      let next = curr.nextElementSibling || document.querySelector('.slide');
+      curr.classList.remove('active');
+      next.classList.add('active');
+    }, 5000);
+  </script>
+</body>
+</html>
