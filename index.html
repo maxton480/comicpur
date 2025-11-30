@@ -6,58 +6,68 @@
 <title>Comic Pur</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,-apple-system,sans-serif;}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;overflow-x:hidden;}
 
 .header{
   position:fixed;top:0;left:0;right:0;background:#0d0d0d;z-index:9999;
-  border-bottom:2px solid #ff2e63;padding:14px 16px;
-}
-.header-inner{
-  max-width:1400px;margin:auto;display:flex;justify-content:center;align-items:center;
+  border-bottom:2px solid #ff2e63;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;
 }
 .logo{color:#ff2e63;font-size:2rem;font-weight:900;text-decoration:none;}
+.search-icon{color:#ff2e63;font-size:1.8rem;cursor:pointer;}
 
-.main{padding-top:90px;padding:20px 16px 60px;}
-.main h1{
-  text-align:center;color:#ff2e63;font-size:2.3rem;margin-bottom:40px;font-weight:900;
+/* Full-screen Search */
+.search-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.97);z-index:99999;
+  display:none;align-items:center;justify-content:center;padding:20px;
 }
+.search-box{
+  width:100%;max-width:600px;position:relative;
+}
+.search-box input{
+  width:100%;padding:20px 60px 20px 20px;font-size:1.5rem;
+  background:#1a1a1a;border:none;border-radius:50px;color:#fff;outline:none;
+}
+.close-search{
+  position:absolute;right:15px;top:50%;transform:translateY(-50%);
+  font-size:2.2rem;color:#ff2e63;cursor:pointer;
+}
+.results{
+  margin-top:15px;background:#111;border-radius:15px;max-height:60vh;overflow-y:auto;padding:10px;
+}
+.result-item{
+  padding:15px;background:#1f1f1f;margin:8px 0;border-radius:12px;cursor:pointer;transition:0.2s;
+}
+.result-item:hover{background:#ff2e63;color:#000;font-weight:bold;}
+
+/* Main Content */
+.main{padding-top:90px;padding:20px 16px 60px;}
+.main h1{text-align:center;color:#ff2e63;font-size:2.3rem;margin-bottom:40px;}
 
 .grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-  gap:22px;
-  max-width:1400px;
-  margin:0 auto;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:22px;
+  max-width:1400px;margin:0 auto;
 }
 .card{
-  border-radius:16px;overflow:hidden;background:#1a1a1a;
-  box-shadow:0 10px 30px rgba(0,0,0,0.7);
+  border-radius:16px;overflow:hidden;background:#1a1a1a;box-shadow:0 10px 30px rgba(0,0,0,0.7);
   transition:transform 0.25s;cursor:pointer;
 }
 .card:active{transform:scale(0.96);}
-.card img{
-  width:100%;height:240px;object-fit:cover;background:#222;
-}
+.card img{width:100%;height:240px;object-fit:cover;background:#222;}
 .info{padding:14px;text-align:center;}
-.title{
-  font-size:1.02rem;font-weight:bold;color:#fff;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.chap{color:#ff2e63;font-size:0.92rem;margin-top:6px;font-weight:600;}
+.title{font-size:1rem;font-weight:bold;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chap{color:#ff2e63;font-size:0.9rem;margin-top:6px;}
 
 @media(min-width:768px){
   .grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:30px;}
   .card img{height:340px;}
-  .logo{font-size:2.3rem;}
 }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-inner">
-    <a href="https://maxton480.github.io/comicpur/" class="logo">Comic Pur</a>
-  </div>
+  <a href="https://maxton480.github.io/comicpur/" class="logo">Comic Pur</a>
+  <div class="search-icon" onclick="openSearch()">Search</div>
 </div>
 
 <div class="main">
@@ -65,26 +75,75 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,-apple-system,sans-s
   <div id="grid" class="grid"></div>
 </div>
 
+<!-- Full Screen Search -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <input type="text" placeholder="Comic ka naam likho..." id="searchInput" autofocus>
+    <div class="close-search" onclick="closeSearch()">×</div>
+    <div class="results" id="results"></div>
+  </div>
+</div>
+
 <script>
-// Full URL se load karega – GitHub Pages pe 100% kaam karega
+let allComics = [];
+
+// Load comics
 fetch('https://maxton480.github.io/comicpur/data/comics.json')
-  .then(res => res.json())
+  .then(r => r.json())
   .then(data => {
-    // Latest first dikhane ke liye reverse kar diya (optional)
-    data.reverse();
-    document.getElementById('grid').innerHTML = data.map(c => `
-      <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
-        <img src="\( {c.cover}" loading="lazy" alt=" \){c.title}">
-        <div class="info">
-          <div class="title">${c.title}</div>
-          <div class="chap">${c.latest}</div>
-        </div>
-      </div>
-    `).join('');
-  })
-  .catch(() => {
-    document.getElementById('grid').innerHTML = '<p style="text-align:center;color:#888;margin-top:50px;">Comics load nahi hue... refresh karo!</p>';
+    allComics = data;
+    renderGrid(data);
   });
+
+// Render grid
+function renderGrid(comics) {
+  document.getElementById('grid').innerHTML = comics.map(c => `
+    <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
+      <img src="\( {c.cover}" loading="lazy" alt=" \){c.title}">
+      <div class="info">
+        <div class="title">${c.title}</div>
+        <div class="chap">${c.latest}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Search functions
+function openSearch() {
+  document.getElementById('searchOverlay').style.display = 'flex';
+  document.getElementById('searchInput').focus();
+}
+function closeSearch() {
+  document.getElementById('searchOverlay').style.display = 'none';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('results').innerHTML = '';
+}
+
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  const query = e.target.value.trim().toLowerCase();
+  const resultsDiv = document.getElementById('results');
+  
+  if (query.length < 2) {
+    resultsDiv.innerHTML = '';
+    return;
+  }
+  
+  const filtered = allComics.filter(c => c.title.toLowerCase().includes(query));
+  
+  if (filtered.length === 0) {
+    resultsDiv.innerHTML = '<div style="text-align:center;padding:20px;color:#888;">Koi comic nahi mila</div>';
+    return;
+  }
+  
+  resultsDiv.innerHTML = filtered.map(c => `
+    <div class="result-item" onclick="location.href='comics/${c.slug}/index.html'">
+      <strong>\( {c.title}</strong> <small style="color:#ff2e63;">( \){c.latest})</small>
+    </div>
+  `).join('');
+});
+
+// Close on Esc
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
 </script>
 
 </body>
