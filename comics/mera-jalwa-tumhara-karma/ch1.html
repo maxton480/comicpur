@@ -1,50 +1,47 @@
+<!-- comics/mera-jalwa-tumhara-karma/ch1.html (replace kar de) -->
 <!DOCTYPE html>
-<html lang="hi">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chapter 1 - Mera Jalwa Tumhara Karma</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0a0a0a;color:#fff;font-family:'Segoe UI',sans-serif;overflow-x:hidden;padding-top:90px;padding-bottom:120px;}
-.container{max-width:1000px;margin:0 auto;padding:20px;}
-.chap-header{background:#111;padding:20px;text-align:center;border-bottom:2px solid #ff2e63;position:sticky;top:90px;z-index:98;}
-.chap-title{color:#ff2e63;font-size:1.8rem;margin-bottom:10px;}
-.page-img{width:100%;max-width:1000px;display:block;margin:20px auto;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
-.bottom-nav{background:#000;position:fixed;bottom:0;left:0;right:0;padding:20px;text-align:center;z-index:999;border-top:2px solid #ff2e63;}
-.nav-btn{background:#ff2e63;color:white;padding:15px 40px;border-radius:50px;font-size:1.3rem;font-weight:bold;margin:0 10px;display:inline-block;text-decoration:none;}
+body{background:#0d0d0d;color:#fff;font-family:Arial,sans-serif;overflow-x:hidden;}
+.topbar{position:fixed;top:0;left:0;right:0;background:rgba(0,0,0,0.95);backdrop-filter:blur(10px);z-index:999;padding:15px 20px;border-bottom:2px solid #ff2e63;display:flex;justify-content:space-between;align-items:center;}
+.logo{color:#ff2e63;font-size:1.8rem;font-weight:bold;text-decoration:none;}
+.chapname{color:#fff;font-size:1.1rem;}
+.reader{max-width:950px;margin:90px auto 120px;padding:0 15px;}
+.reader img{width:100%;display:block;margin:12px auto;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.7);border:1px solid #333;}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,0.95);backdrop-filter:blur(10px);z-index:999;padding:20px;display:flex;justify-content:center;gap:20px;border-top:2px solid #ff2e63;}
+.btn{background:#ff2e63;color:#fff;padding:14px 40px;border-radius:50px;font-weight:bold;font-size:1.2rem;text-decoration:none;}
 </style>
 </head>
 <body>
 
-<div w3-include-html="../header.html"></div>
-
-<div class="container">
-  <div class="chap-header">
-    <h1 class="chap-title">Mera Jalwa Tumhara Karma - Chapter 1</h1>
-    <p>Pehli Mulakat</p>
-  </div>
-
-  <img class="page-img" src="https://files.catbox.moe/db3sii.png">
-  <img class="page-img" src="https://files.catbox.moe/53a9ya.png">
-  <img class="page-img" src="https://files.catbox.moe/owja6d.png">
-  <img class="page-img" src="https://files.catbox.moe/fnaltu.png">
-  <img class="page-img" src="https://files.catbox.moe/ss334y.png">
-  <img class="page-img" src="https://files.catbox.moe/2cf2mg.png">
-  <img class="page-img" src="https://files.catbox.moe/pwlhdt.png">
-  <img class="page-img" src="https://files.catbox.moe/wfunau.png">
-  <img class="page-img" src="https://files.catbox.moe/wbimq7.png">
-  <img class="page-img" src="https://files.catbox.moe/lummls.png">
-  <img class="page-img" src="https://files.catbox.moe/6nl8ic.png">
-
-  <div class="bottom-nav">
-    <a href="../index.html" class="nav-btn">COMIC INFO</a>
-    <a href="ch2.html" class="nav-btn">NEXT CHAPTER</a>
-  </div>
+<div class="topbar">
+  <a href="https://maxton480.github.io/comicpur/" class="logo">Comic Pur</a>
+  <div class="chapname">Mera Jalwa Tumhara Karma » Chapter 1</div>
 </div>
 
-<script>
-function includeHTML(){var z,i,e,f,x;z=document.getElementsByTagName("*");for(i=0;i<z.length;i++){e=z[i];f=e.getAttribute("w3-include-html");if(f){x=new XMLHttpRequest();x.onreadystatechange=function(){if(this.readyState==4&&this.status==200){e.innerHTML=this.responseText;e.removeAttribute("w3-include-html");includeHTML();}};x.open("GET",f,true);x.send();}}}includeHTML();
-</script>
+<div class="reader">
+  <img src="https://files.catbox.moe/db3sii.png">
+  <img src="https://files.catbox.moe/53a9ya.png">
+  <img src="https://files.catbox.moe/owja6d.png">
+  <img src="https://files.catbox.moe/fnaltu.png">
+  <img src="https://files.catbox.moe/ss334y.png">
+  <img src="https://files.catbox.moe/2cf2mg.png">
+  <img src="https://files.catbox.moe/pwlhdt.png">
+  <img src="https://files.catbox.moe/wfunau.png">
+  <img src="https://files.catbox.moe/wbimq7.png">
+  <img src="https://files.catbox.moe/lummls.png">
+  <img src="https://files.catbox.moe/6nl8ic.png">
+</div>
+
+<div class="bottomnav">
+  <a href="../index.html" class="btn">COMIC INFO</a>
+  <a href="ch2.html" class="btn">NEXT CHAPTER</a>
+</div>
+
 </body>
 </html>
