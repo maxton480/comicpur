@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comic Pur - High Quality Hindi Comics</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI',Arial,sans-serif;line-height:1.6;overflow-x:hidden;}
-.container{max-width:1400px;margin:0 auto;padding:20px;}
-h1{text-align:center;color:#ff2e63;font-size:2.8rem;margin:40px 0;font-weight:bold;}
-.latest-section{background:#111;padding:40px 20px;border-radius:15px;margin:20px 0;}
-.latest-title{text-align:center;color:#ff2e63;font-size:2.2rem;margin-bottom:30px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:25px;}
-.card{position:relative;border-radius:15px;overflow:hidden;background:#1a1a1a;box-shadow:0 8px 25px rgba(0,0,0,0.5);transition:0.3s;cursor:pointer;}
-.card:hover{transform:translateY(-10px);box-shadow:0 15px 40px rgba(255,46,99,0.3);}
-.card img{width:100%;height:280px;object-fit:cover;}
-.card-info{padding:15px;}
-.card-title{font-size:1.2rem;font-weight:bold;color:#fff;margin-bottom:5px;}
-.card-chap{color:#ff2e63;font-size:1rem;}
-.load-more{text-align:center;margin:40px 0;}
-.load-more a{background:#ff2e63;color:white;padding:15px 40px;border-radius:25px;font-weight:bold;text-decoration:none;display:inline-block;}
-.load-more a:hover{background:#e01e50;}
-.footer{background:#000;padding:30px;text-align:center;color:#666;border-top:1px solid #333;margin-top:50px;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comic Pur - Free Hindi Comics</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI',Arial,sans-serif;line-height:1.6;}
+    .header{position:fixed;top:0;left:0;right:0;background:#000;z-index:999;border-bottom:2px solid #ff2e63;padding:12px 20px;}
+    .header-inner{max-width:1400px;margin:auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;}
+    .logo{color:#ff2e63;font-size:2.2rem;font-weight:bold;text-decoration:none;}
+    .search input{padding:10px 20px;border-radius:25px;border:none;background:#111;color:white;width:300px;}
+    .all-btn{background:#ff2e63;color:white;padding:10px 25px;border-radius:25px;font-weight:bold;text-decoration:none;}
+    .hero{height:70vh;background:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.9)), url('comics/mera-jalwa-tumhara-karma/cover.jpg') center/cover;display:flex;align-items:center;justify-content:center;text-align:center;}
+    .hero h1{font-size:4rem;color:#ff2e63;text-shadow:0 0 30px #ff2e63;}
+    .hero p{font-size:1.8rem;margin:20px 0;}
+    .btn{background:#ff2e63;padding:18px 60px;border-radius:50px;color:#fff;font-size:1.6rem;display:inline-block;text-decoration:none;}
+    section{padding:80px 20px 40px;text-align:center;}
+    h2{color:#ff2e63;font-size:2.6rem;margin-bottom:40px;}
+    .grid{max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:30px;}
+    .card{border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(255,46,99,0.4);transition:0.3s;}
+    .card:hover{transform:translateY(-12px);}
+    .card img{width:100%;height:340px;object-fit:cover;}
+    .card h3{margin:15px 0 8px;font-size:1.3rem;text-align:center;}
+    .latest-ch{color:#ff2e63;font-weight:bold;}
+  </style>
 </head>
 <body>
 
-<div w3-include-html="header.html"></div>
-
-<div class="container">
-  <h1>Comic Pur - High Quality Hindi Comics</h1>
-  
-  <div class="latest-section">
-    <h2 class="latest-title">Latest Comic Updates</h2>
-    <div id="latestGrid" class="grid"></div>
-    <div class="load-more">
-      <a href="all-comics.html">Load More Comics</a>
-    </div>
+<div class="header">
+  <div class="header-inner">
+    <a href="https://maxton480.github.io/comicpur/" class="logo">Comic Pur</a>
+    <input type="text" placeholder="Search comics..." oninput="searchNow(this.value)" class="search">
+    <a href="all-comics.html" class="all-btn">All Comics</a>
   </div>
 </div>
 
-<div class="footer">
-  <p>Comic Pur © - All Rights Reserved</p>
+<div class="hero">
+  <div>
+    <h1>Mera Jalwa Tumhara Karma</h1>
+    <p>Chapter 1 • Fresh Release</p>
+    <a href="comics/mera-jalwa-tumhara-karma/index.html" class="btn">READ NOW</a>
+  </div>
 </div>
+
+<section>
+  <h2>Latest Updates</h2>
+  <div id="latestGrid" class="grid"></div>
+</section>
 
 <script>
 fetch('data/comics.json')
@@ -51,27 +56,25 @@ fetch('data/comics.json')
     const grid = document.getElementById('latestGrid');
     data.forEach(c => {
       grid.innerHTML += `
-        <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
-          <img src="\( {c.cover}" alt=" \){c.title}">
-          <div class="card-info">
-            <div class="card-title">${c.title}</div>
-            <div class="card-chap">${c.latest}</div>
-          </div>
+        <div class="card">
+          <a href="comics/${c.slug}/index.html">
+            <img src="\( {c.cover}" alt=" \){c.title}">
+            <h3>${c.title}</h3>
+            <p class="latest-ch">${c.latest}</p>
+          </a>
         </div>`;
     });
   });
 
-function searchNow(q){
-  if(q.length<2) return;
+function searchNow(q) {
+  if(q.length < 2) return;
   fetch('data/comics.json')
-    .then(r=>r.json())
-    .then(d=>{
-      const found = d.find(c=>c.title.toLowerCase().includes(q.toLowerCase()));
+    .then(r => r.json())
+    .then(data => {
+      const found = data.find(c => c.title.toLowerCase().includes(q.toLowerCase()));
       if(found) location.href = `comics/${found.slug}/index.html`;
     });
 }
-
-function includeHTML(){var z,i,e,f,x;z=document.getElementsByTagName("*");for(i=0;i<z.length;i++){e=z[i];f=e.getAttribute("w3-include-html");if(f){x=new XMLHttpRequest();x.onreadystatechange=function(){if(this.readyState==4&&this.status==200){e.innerHTML=this.responseText;e.removeAttribute("w3-include-html");includeHTML();}};x.open("GET",f,true);x.send();}}}includeHTML();
 </script>
 </body>
 </html>
