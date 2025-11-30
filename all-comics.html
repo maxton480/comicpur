@@ -5,31 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>All Comics - Comic Pur</title>
 <style>
-body{background:#000;color:#fff;font-family:Arial;padding:20px;}
-h1{color:#ff2e63;text-align:center;margin:40px 0;}
-.grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:30px;}
-.card img{width:100%;height:320px;object-fit:cover;border-radius:18px;}
+body{background:#000;color:#fff;font-family:Arial;padding:20px;margin-top:70px;}
+h1{color:#ff2e63;text-align:center;margin:40px 0;font-size:3rem;}
+.grid{max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:30px;}
+.card img{width:100%;height:340px;object-fit:cover;border-radius:20px;}
 </style>
 </head>
 <body>
+
+<div w3-include-html="header.html"></div>
+
 <h1>All Comics</h1>
 <div id="all" class="grid"></div>
 
 <script>
-fetch('../data/comics.json')
+fetch('data/comics.json')
   .then(r => r.json())
   .then(data => {
     const div = document.getElementById('all');
     data.forEach(c => {
       div.innerHTML += `
         <div class="card">
-          <a href="../comics/${c.slug}/index.html">
-            <img src="../${c.cover}">
-            <h3 style="text-align:center;margin-top:12px;color:#fff;font-size:1.4rem;">${c.title}</h3>
+          <a href="comics/${c.slug}/index.html">
+            <img src="${c.cover}">
+            <h3 style="text-align:center;margin-top:12px;font-size:1.3rem;">${c.title}</h3>
           </a>
         </div>`;
     });
   });
+</script>
+
+<script>
+function includeHTML(){var z,i,elmt,file,xhttp;z=document.getElementsByTagName("*");for(i=0;i<z.length;i++){elmt=z[i];file=elmt.getAttribute("w3-include-html");if(file){xhttp=new XMLHttpRequest();xhttp.onreadystatechange=function(){if(this.readyState==4&&this.status==200){elmt.innerHTML=this.responseText;elmt.removeAttribute("w3-include-html");includeHTML();}};xhttp.open("GET",file,true);xhttp.send();return;}}}includeHTML();
 </script>
 </body>
 </html>
