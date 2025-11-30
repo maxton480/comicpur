@@ -1,1 +1,84 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Comic Pur</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;}
+.header{position:fixed;top:0;left:0;right:0;background:#0d0d0d;z-index:9999;border-bottom:2px solid #ff2e63;padding:12px 16px;}
+.header-inner{max-width:1400px;margin:auto;display:flex;flex-direction:column;gap:10px;align-items:center;}
+.logo{color:#ff2e63;font-size:1.8rem;font-weight:900;text-decoration:none;}
+.search input{width:100%;max-width:500px;padding:14px 20px;border-radius:30px;background:#1a1a1a;border:none;color:white;font-size:1rem;}
+.all-btn{background:#ff2e63;color:white;padding:10px 20px;border-radius:25px;font-weight:bold;text-decoration:none;}
+.hero{height:70vh;background:linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.9)),url('https://files.catbox.moe/a5csgr.jpg') center/cover;display:flex;align-items:center;justify-content:center;text-align:center;}
+.hero h1{font-size:3.5rem;color:#ff2e63;text-shadow:0 0 30px #000;margin-bottom:10px;}
+.hero p{font-size:1.4rem;margin:15px 0;}
+.btn{background:#ff2e63;padding:16px 50px;border-radius:50px;color:white;font-weight:bold;text-decoration:none;font-size:1.3rem;}
+.latest{padding:40px 16px;}
+.latest h2{text-align:center;color:#ff2e63;font-size:2rem;margin-bottom:30px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px;}
+.card{border-radius:12px;overflow:hidden;background:#1a1a1a;box-shadow:0 8px 25px rgba(0,0,0,0.6);transition:0.3s;cursor:pointer;}
+.card:active{transform:scale(0.97);}
+.card img{width:100%;height:210px;object-fit:cover;background:#222;}
+.info{padding:12px;text-align:center;}
+.title{font-size:0.98rem;font-weight:bold;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chap{color:#ff2e63;font-size:0.9rem;margin-top:4px;}
+@media(min-width:768px){
+  .header-inner{flex-direction:row;justify-content:space-between;}
+  .hero h1{font-size:5rem;}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:25px;}
+  .card img{height:300px;}
+}
+</style>
+</head>
+<body>
 
+<div class="header">
+  <div class="header-inner">
+    <a href="/" class="logo">Comic Pur</a>
+    <input type="text" placeholder="Search comics..." oninput="searchNow(this.value)">
+    <a href="all-comics.html" class="all-btn">All Comics</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div>
+    <h1>Mera Jalwa Tumhara Karma</h1>
+    <p>Chapter 1 • New Release</p>
+    <a href="comics/mera-jalwa-tumhara-karma/index.html" class="btn">Read Now</a>
+  </div>
+</div>
+
+<div class="latest">
+  <h2>Latest Updates</h2>
+  <div id="grid" class="grid"></div>
+</div>
+
+<script>
+fetch('data/comics.json')
+.then(r=>r.json())
+.then(d=>{
+  document.getElementById('grid').innerHTML = d.map(c=>`
+    <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
+      <img src="${c.cover}" loading="lazy">
+      <div class="info">
+        <div class="title">${c.title}</div>
+        <div class="chap">${c.latest}</div>
+      </div>
+    </div>`).join('');
+});
+
+function searchNow(q){
+  if(q.trim().length<2) return;
+  fetch('data/comics.json')
+  .then(r=>r.json())
+  .then(d=>{
+    const f = d.find(c=>c.title.toLowerCase().includes(q.toLowerCase()));
+    if(f) location.href=`comics/${f.slug}/index.html`;
+  });
+}
+</script>
+</body>
+</html>
