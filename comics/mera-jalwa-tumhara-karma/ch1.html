@@ -1,27 +1,50 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chapter 1</title>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 1 - Mera Jalwa Tumhara Karma</title>
 <style>
-body{margin:0;background:#000;color:#fff;}
-img{width:100%;display:block;margin:5px 0;}
-.chap-title{background:#111;color:#ff2e63;padding:15px;text-align:center;position:sticky;top:82px;z-index:98;font-size:1.6rem;}
-.next-btn{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#ff2e63;padding:16px 60px;border-radius:50px;color:white;font-size:1.5rem;z-index:99;}
-</style></head><body>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0a;color:#fff;font-family:'Segoe UI',sans-serif;overflow-x:hidden;padding-top:90px;padding-bottom:120px;}
+.container{max-width:1000px;margin:0 auto;padding:20px;}
+.chap-header{background:#111;padding:20px;text-align:center;border-bottom:2px solid #ff2e63;position:sticky;top:90px;z-index:98;}
+.chap-title{color:#ff2e63;font-size:1.8rem;margin-bottom:10px;}
+.page-img{width:100%;max-width:1000px;display:block;margin:20px auto;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.8);}
+.bottom-nav{background:#000;position:fixed;bottom:0;left:0;right:0;padding:20px;text-align:center;z-index:999;border-top:2px solid #ff2e63;}
+.nav-btn{background:#ff2e63;color:white;padding:15px 40px;border-radius:50px;font-size:1.3rem;font-weight:bold;margin:0 10px;display:inline-block;text-decoration:none;}
+</style>
+</head>
+<body>
+
 <div w3-include-html="../header.html"></div>
-<div class="chap-title">Chapter 1 - Mera Jalwa Tumhara Karma</div>
 
-<img src="https://files.catbox.moe/db3sii.png">
-<img src="https://files.catbox.moe/53a9ya.png">
-<img src="https://files.catbox.moe/owja6d.png">
-<img src="https://files.catbox.moe/fnaltu.png">
-<img src="https://files.catbox.moe/ss334y.png">
-<img src="https://files.catbox.moe/2cf2mg.png">
-<img src="https://files.catbox.moe/pwlhdt.png">
-<img src="https://files.catbox.moe/wfunau.png">
-<img src="https://files.catbox.moe/wbimq7.png">
-<img src="https://files.catbox.moe/lummls.png">
-<img src="https://files.catbox.moe/6nl8ic.png">
+<div class="container">
+  <div class="chap-header">
+    <h1 class="chap-title">Mera Jalwa Tumhara Karma - Chapter 1</h1>
+    <p>Pehli Mulakat</p>
+  </div>
 
-<a href="ch2.html" class="next-btn">NEXT CHAPTER →</a>
-<script>function includeHTML(){var z,i,e,f,x;z=document.getElementsByTagName("*");for(i=0;i<z.length;i++){e=z[i];f=e.getAttribute("w3-include-html");if(f){x=new XMLHttpRequest();x.onreadystatechange=function(){if(this.readyState==4&&this.status==200){e.innerHTML=this.responseText;e.removeAttribute("w3-include-html");includeHTML();}};x.open("GET",f,true);x.send();}}}includeHTML();</script>
-</body></html>
+  <img class="page-img" src="https://files.catbox.moe/db3sii.png">
+  <img class="page-img" src="https://files.catbox.moe/53a9ya.png">
+  <img class="page-img" src="https://files.catbox.moe/owja6d.png">
+  <img class="page-img" src="https://files.catbox.moe/fnaltu.png">
+  <img class="page-img" src="https://files.catbox.moe/ss334y.png">
+  <img class="page-img" src="https://files.catbox.moe/2cf2mg.png">
+  <img class="page-img" src="https://files.catbox.moe/pwlhdt.png">
+  <img class="page-img" src="https://files.catbox.moe/wfunau.png">
+  <img class="page-img" src="https://files.catbox.moe/wbimq7.png">
+  <img class="page-img" src="https://files.catbox.moe/lummls.png">
+  <img class="page-img" src="https://files.catbox.moe/6nl8ic.png">
+
+  <div class="bottom-nav">
+    <a href="../index.html" class="nav-btn">COMIC INFO</a>
+    <a href="ch2.html" class="nav-btn">NEXT CHAPTER</a>
+  </div>
+</div>
+
+<script>
+function includeHTML(){var z,i,e,f,x;z=document.getElementsByTagName("*");for(i=0;i<z.length;i++){e=z[i];f=e.getAttribute("w3-include-html");if(f){x=new XMLHttpRequest();x.onreadystatechange=function(){if(this.readyState==4&&this.status==200){e.innerHTML=this.responseText;e.removeAttribute("w3-include-html");includeHTML();}};x.open("GET",f,true);x.send();}}}includeHTML();
+</script>
+</body>
+</html>
