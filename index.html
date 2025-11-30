@@ -6,42 +6,49 @@
 <title>Comic Pur</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,-apple-system,sans-serif;line-height:1.5;}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,-apple-system,sans-serif;}
 
 .header{
   position:fixed;top:0;left:0;right:0;background:#0d0d0d;z-index:9999;
   border-bottom:2px solid #ff2e63;padding:14px 16px;
 }
 .header-inner{
-  max-width:1400px;margin:auto;display:flex;justify-content:space-between;align-items:center;
+  max-width:1400px;margin:auto;display:flex;justify-content:center;align-items:center;
 }
-.logo{color:#ff2e63;font-size:1.9rem;font-weight:900;text-decoration:none;}
-.all-btn{background:#ff2e63;color:#fff;padding:10px 24px;border-radius:30px;font-weight:bold;text-decoration:none;font-size:0.95rem;}
+.logo{color:#ff2e63;font-size:2rem;font-weight:900;text-decoration:none;}
 
-.main{padding-top:90px;padding:20px 16px 40px;}
+.main{padding-top:90px;padding:20px 16px 60px;}
 .main h1{
-  text-align:center;color:#ff2e63;font-size:2.2rem;margin-bottom:40px;font-weight:900;
+  text-align:center;color:#ff2e63;font-size:2.3rem;margin-bottom:40px;font-weight:900;
 }
 
 .grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:20px;
-  max-width:1400px;margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:22px;
+  max-width:1400px;
+  margin:0 auto;
 }
 .card{
-  border-radius:14px;overflow:hidden;background:#1a1a1a;box-shadow:0 10px 30px rgba(0,0,0,0.7);
+  border-radius:16px;overflow:hidden;background:#1a1a1a;
+  box-shadow:0 10px 30px rgba(0,0,0,0.7);
   transition:transform 0.25s;cursor:pointer;
 }
 .card:active{transform:scale(0.96);}
-.card img{width:100%;height:230px;object-fit:cover;background:#222;}
+.card img{
+  width:100%;height:240px;object-fit:cover;background:#222;
+}
 .info{padding:14px;text-align:center;}
-.title{font-size:1rem;font-weight:bold;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.chap{color:#ff2e63;font-size:0.9rem;margin-top:6px;font-weight:600;}
+.title{
+  font-size:1.02rem;font-weight:bold;color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.chap{color:#ff2e63;font-size:0.92rem;margin-top:6px;font-weight:600;}
 
-/* Desktop */
 @media(min-width:768px){
-  .grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:28px;}
-  .card img{height:320px;}
-  .logo{font-size:2.1rem;}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:30px;}
+  .card img{height:340px;}
+  .logo{font-size:2.3rem;}
 }
 </style>
 </head>
@@ -50,19 +57,21 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,-apple-system,sans-s
 <div class="header">
   <div class="header-inner">
     <a href="https://maxton480.github.io/comicpur/" class="logo">Comic Pur</a>
-    <a href="all-comics.html" class="all-btn">All Comics</a>
   </div>
 </div>
 
 <div class="main">
-  <h1>Latest Updates</h1>
+  <h1>All Comics</h1>
   <div id="grid" class="grid"></div>
 </div>
 
 <script>
-fetch('data/comics.json')
+// Full URL se load karega – GitHub Pages pe 100% kaam karega
+fetch('https://maxton480.github.io/comicpur/data/comics.json')
   .then(res => res.json())
   .then(data => {
+    // Latest first dikhane ke liye reverse kar diya (optional)
+    data.reverse();
     document.getElementById('grid').innerHTML = data.map(c => `
       <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
         <img src="\( {c.cover}" loading="lazy" alt=" \){c.title}">
@@ -73,7 +82,9 @@ fetch('data/comics.json')
       </div>
     `).join('');
   })
-  .catch(err => console.error('JSON load error:', err));
+  .catch(() => {
+    document.getElementById('grid').innerHTML = '<p style="text-align:center;color:#888;margin-top:50px;">Comics load nahi hue... refresh karo!</p>';
+  });
 </script>
 
 </body>
