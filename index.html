@@ -8,9 +8,8 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;}
 .header{position:fixed;top:0;left:0;right:0;background:#0d0d0d;z-index:9999;border-bottom:2px solid #ff2e63;padding:12px 16px;}
-.header-inner{max-width:1400px;margin:auto;display:flex;flex-direction:column;gap:10px;align-items:center;}
-.logo{color:#ff2e63;font-size:1.8rem;font-weight:900;text-decoration:none;cursor:pointer;}
-.search input{width:100%;max-width:500px;padding:14px 20px;border-radius:30px;background:#1a1a1a;border:none;color:white;font-size:1rem;outline:none;}
+.header-inner{max-width:1400px;margin:auto;display:flex;justify-content:space-between;align-items:center;}
+.logo{color:#ff2e63;font-size:1.8rem;font-weight:900;text-decoration:none;}
 .all-btn{background:#ff2e63;color:white;padding:10px 20px;border-radius:25px;font-weight:bold;text-decoration:none;}
 .slider{height:70vh;background:#111;display:flex;align-items:center;justify-content:center;color:#666;font-size:1.6rem;}
 .latest{padding:40px 16px;}
@@ -23,21 +22,16 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;}
 .title{font-size:0.98rem;font-weight:bold;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .chap{color:#ff2e63;font-size:0.9rem;margin-top:4px;}
 @media(min-width:768px){
-  .header-inner{flex-direction:row;justify-content:space-between;}
   .grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:25px;}
   .card img{height:300px;}
 }
 </style>
 </head>
 <body>
-  
-<div w3-include-html="header.html"></div>
-<div style="height:68px;"></div> <!-- header ki height ke liye space -->
-  
+
 <div class="header">
   <div class="header-inner">
     <a href="https://maxton480.github.io/comicpur/" class="logo">Comic Pur</a>
-    <input type="text" placeholder="Search comics..." oninput="searchNow(this.value)">
     <a href="all-comics.html" class="all-btn">All Comics</a>
   </div>
 </div>
@@ -55,24 +49,13 @@ fetch('data/comics.json')
 .then(d=>{
   document.getElementById('grid').innerHTML = d.map(c=>`
     <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
-      <img src="${c.cover}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x400/222/666?text=No+Image'">
+      <img src="${c.cover}" loading="lazy">
       <div class="info">
         <div class="title">${c.title}</div>
         <div class="chap">${c.latest}</div>
       </div>
     </div>`).join('');
 });
-
-function searchNow(q){
-  q = q.trim().toLowerCase();
-  if(q.length < 2) return;
-  fetch('data/comics.json')
-  .then(r=>r.json())
-  .then(d=>{
-    const f = d.find(c=>c.title.toLowerCase().includes(q));
-    if(f) location.href = `comics/${f.slug}/index.html`;
-  });
-}
 </script>
 </body>
 </html>
