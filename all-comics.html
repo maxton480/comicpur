@@ -1,46 +1,35 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Comics - Comic Pur</title>
-  <style>
-    body{background:#0a0a0a;color:#ddd;font-family:'Segoe UI',Arial;}
-    header{background:#000;padding:1rem;text-align:center;border-bottom:2px solid #ff2e63;}
-    .logo{font-size:2rem;color:#ff2e63;}
-    .grid{max-width:1400px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2rem;}
-    .card{background:#111;border-radius:16px;overflow:hidden;transition:0.3s;}
-    .card:hover{transform:translateY(-10px);}
-    .card img{width:100%;height:280px;object-fit:cover;}
-    .info{padding:1rem;text-align:center;}
-    .title{font-weight:600;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Comics - Comic Pur</title>
+<style>
+body{background:#000;color:#fff;font-family:Arial;padding:20px;}
+h1{color:#ff2e63;text-align:center;margin:40px 0;}
+.grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:30px;}
+.card img{width:100%;height:320px;object-fit:cover;border-radius:18px;}
+</style>
 </head>
 <body>
-  <header><div class="logo">Comic Pur - All Comics</div></header>
-  <div class="grid" id="allGrid">
-    <!-- Loaded from JSON -->
-  </div>
-  <script>
-    fetch('../data/comics.json')
-      .then(response => response.json())
-      .then(data => {
-        const grid = document.getElementById('allGrid');
-        data.comics.sort((a, b) => new Date(b.updated) - new Date(a.updated)).forEach(comic => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            <a href="../comics/${comic.slug}/index.html">
-              <img src="../\( {comic.cover}" alt=" \){comic.title}">
-              <div class="info">
-                <div class="title">${comic.title}</div>
-                <p>${comic.latest}</p>
-              </div>
-            </a>
-          `;
-          grid.appendChild(card);
-        });
-      });
-  </script>
+<h1>All Comics</h1>
+<div id="all" class="grid"></div>
+
+<script>
+fetch('../data/comics.json')
+  .then(r => r.json())
+  .then(data => {
+    const div = document.getElementById('all');
+    data.forEach(c => {
+      div.innerHTML += `
+        <div class="card">
+          <a href="../comics/${c.slug}/index.html">
+            <img src="../${c.cover}">
+            <h3 style="text-align:center;margin-top:12px;color:#fff;font-size:1.4rem;">${c.title}</h3>
+          </a>
+        </div>`;
+    });
+  });
+</script>
 </body>
 </html>
