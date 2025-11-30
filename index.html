@@ -12,10 +12,7 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;}
 .logo{color:#ff2e63;font-size:1.8rem;font-weight:900;text-decoration:none;}
 .search input{width:100%;max-width:500px;padding:14px 20px;border-radius:30px;background:#1a1a1a;border:none;color:white;font-size:1rem;}
 .all-btn{background:#ff2e63;color:white;padding:10px 20px;border-radius:25px;font-weight:bold;text-decoration:none;}
-.hero{height:70vh;background:linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.9)),url('https://files.catbox.moe/a5csgr.jpg') center/cover;display:flex;align-items:center;justify-content:center;text-align:center;}
-.hero h1{font-size:3.5rem;color:#ff2e63;text-shadow:0 0 30px #000;margin-bottom:10px;}
-.hero p{font-size:1.4rem;margin:15px 0;}
-.btn{background:#ff2e63;padding:16px 50px;border-radius:50px;color:white;font-weight:bold;text-decoration:none;font-size:1.3rem;}
+.slider{height:70vh;background:#111;display:flex;align-items:center;justify-content:center;color:#666;font-size:1.6rem;}
 .latest{padding:40px 16px;}
 .latest h2{text-align:center;color:#ff2e63;font-size:2rem;margin-bottom:30px;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px;}
@@ -27,7 +24,6 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;}
 .chap{color:#ff2e63;font-size:0.9rem;margin-top:4px;}
 @media(min-width:768px){
   .header-inner{flex-direction:row;justify-content:space-between;}
-  .hero h1{font-size:5rem;}
   .grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:25px;}
   .card img{height:300px;}
 }
@@ -43,13 +39,8 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;}
   </div>
 </div>
 
-<div class="hero">
-  <div>
-    <h1>Mera Jalwa Tumhara Karma</h1>
-    <p>Chapter 1 • New Release</p>
-    <a href="comics/mera-jalwa-tumhara-karma/index.html" class="btn">Read Now</a>
-  </div>
-</div>
+<!-- Hero banner hata diya – yahan auto-slide aayega -->
+<div class="slider">Auto Slide Banner Yahan Aayega</div>
 
 <div class="latest">
   <h2>Latest Updates</h2>
@@ -72,13 +63,4 @@ fetch('data/comics.json')
 
 function searchNow(q){
   if(q.trim().length<2) return;
-  fetch('data/comics.json')
-  .then(r=>r.json())
-  .then(d=>{
-    const f = d.find(c=>c.title.toLowerCase().includes(q.toLowerCase()));
-    if(f) location.href=`comics/${f.slug}/index.html`;
-  });
-}
-</script>
-</body>
-</html>
+  fetch('
