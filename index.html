@@ -3,53 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comic Pur</title>
+<title>Comic Pur - Free Hindi Comics</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#000;color:#fff;font-family:Arial;}
-header{background:#111;padding:20px;text-align:center;font-size:2.8rem;color:#ff2e63;font-weight:bold;}
+body{background:#000;color:#fff;font-family:Arial,sans-serif;}
 .hero{height:100vh;background:url(comics/mera-jalwa-tumhara-karma/cover.jpg) center/cover;display:flex;align-items:center;justify-content:center;text-align:center;}
-.hero h1{font-size:4rem;color:#ff2e63;text-shadow:0 0 20px #ff2e63;}
-.btn{background:#ff2e63;padding:18px 60px;border-radius:50px;color:#fff;font-size:1.5rem;margin-top:20px;display:inline-block;}
-section{padding:60px 20px;text-align:center;}
-h2{color:#ff2e63;font-size:2.5rem;margin-bottom:40px;}
-.grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:30px;}
-.card img{width:100%;height:320px;object-fit:cover;border-radius:18px;box-shadow:0 10px 30px rgba(255,46,99,0.4);}
-.card h3{margin-top:15px;color:#fff;font-size:1.4rem;text-align:center;}
+.hero h1{font-size:4.5rem;color:#ff2e63;text-shadow:0 0 30px #ff2e63;}
+.hero p{font-size:1.8rem;margin:20px 0;}
+.btn{background:#ff2e63;padding:18px 60px;border-radius:50px;color:#fff;font-size:1.6rem;display:inline-block;}
+section{padding:80px 20px 40px;text-align:center;}
+h2{color:#ff2e63;font-size:2.6rem;margin-bottom:40px;}
+.grid{max-width:1400px;margin:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:30px;}
+.card{overflow:hidden;border-radius:20px;box-shadow:0 10px 30px rgba(255,46,99,0.4);transition:0.3s;}
+.card:hover{transform:translateY(-15px);}
+.card img{width:100%;height:340px;object-fit:cover;}
+.card h3{margin:15px 0 8px;font-size:1.3rem;}
+.latest-ch{color:#ff2e63;font-weight:bold;}
 </style>
 </head>
 <body>
-<header>Comic Pur</header>
+
+<div w3-include-html="header.html"></div>
 
 <div class="hero">
   <div>
     <h1>Mera Jalwa Tumhara Karma</h1>
-    <p style="font-size:1.8rem;margin:20px 0;">Chapter 1 • Fresh Release</p>
+    <p>Chapter 1 • Fresh Release</p>
     <a href="comics/mera-jalwa-tumhara-karma/index.html" class="btn">READ NOW</a>
   </div>
 </div>
 
 <section>
   <h2>Latest Updates</h2>
-  <div id="latest" class="grid"></div>
+  <div id="latestGrid" class="grid"></div>
 </section>
 
 <script>
 fetch('data/comics.json')
   .then(r => r.json())
   .then(data => {
-    const div = document.getElementById('latest');
+    const grid = document.getElementById('latestGrid');
     data.forEach(c => {
-      div.innerHTML += `
+      grid.innerHTML += `
         <div class="card">
           <a href="comics/${c.slug}/index.html">
             <img src="\( {c.cover}" alt=" \){c.title}">
             <h3>${c.title}</h3>
-            <p style="color:#ff2e63;margin-top:8px;">${c.latest}</p>
+            <p class="latest-ch">${c.latest}</p>
           </a>
         </div>`;
     });
   });
+
+function searchNow(q) {
+  if(q.length < 2) return;
+  fetch('data/comics.json')
+    .then(r => r.json())
+    .then(data => {
+      const res = data.find(c => c.title.toLowerCase().includes(q.toLowerCase()));
+      if(res) location.href = `comics/${res.slug}/index.html`;
+    });
+}
+</script>
+
+<script>
+function includeHTML(){var z,i,elmt,file,xhttp;z=document.getElementsByTagName("*");for(i=0;i<z.length;i++){elmt=z[i];file=elmt.getAttribute("w3-include-html");if(file){xhttp=new XMLHttpRequest();xhttp.onreadystatechange=function(){if(this.readyState==4&&this.status==200){elmt.innerHTML=this.responseText;elmt.removeAttribute("w3-include-html");includeHTML();}};xhttp.open("GET",file,true);xhttp.send();return;}}}includeHTML();
 </script>
 </body>
 </html>
