@@ -1,15 +1,61 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mera Jalwa Tumhara Karma</title>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mera Jalwa Tumhara Karma - Comic Pur</title>
 <style>
-body{background:#000;color:#fff;text-align:center;padding:100px 20px 40px;font-family:Arial;}
-img{max-width:100%;border-radius:20px;margin:20px 0;}
-.btn{background:#ff2e63;padding:18px 50px;border-radius:50px;color:#fff;font-size:1.5rem;display:inline-block;margin:20px;}
-</style></head><body>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI',Arial,sans-serif;padding-top:90px;}
+.container{max-width:1200px;margin:0 auto;padding:20px;}
+.series-header{display:flex;gap:30px;margin:40px 0;flex-wrap:wrap;}
+.series-cover{width:350px;border-radius:20px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.8);}
+.series-cover img{width:100%;}
+.series-info{flex:1;}
+.series-title{font-size:3rem;color:#ff2e63;margin-bottom:15px;}
+.series-meta{font-size:1.1rem;margin:10px 0;color:#ccc;}
+.series-synopsis{background:#111;padding:25px;border-radius:15px;border-left:5px solid #ff2e63;margin:30px 0;}
+.chapters{margin:40px 0;}
+.chapters h2{color:#ff2e63;font-size:2rem;text-align:center;margin-bottom:20px;}
+.ch-list{background:#111;border-radius:15px;overflow:hidden;}
+.ch-list a{display:block;padding:20px;background:#1a1a1a;margin:10px;border-radius:12px;color:white;text-decoration:none;font-size:1.2rem;transition:0.3s;}
+.ch-list a:hover{background:#ff2e63;transform:translateX(10px);}
+</style>
+</head>
+<body>
+
 <div w3-include-html="../header.html"></div>
-<h1 style="color:#ff2e63;font-size:3rem;">Mera Jalwa Tumhara Karma</h1>
-<img src="cover.jpg">
-<p style="font-size:1.5rem;margin:30px;">Chapter 1 • College Romance</p>
-<a href="ch1.html" class="btn">READ CHAPTER 1</a>
-<script>function includeHTML(){var z,i,e,f,x;z=document.getElementsByTagName("*");for(i=0;i<z.length;i++){e=z[i];f=e.getAttribute("w3-include-html");if(f){x=new XMLHttpRequest();x.onreadystatechange=function(){if(this.readyState==4&&this.status==200){e.innerHTML=this.responseText;e.removeAttribute("w3-include-html");includeHTML();}};x.open("GET",f,true);x.send();}}}includeHTML();</script>
-</body></html>
+
+<div class="container">
+  <div class="series-header">
+    <div class="series-cover">
+      <img src="cover.jpg" alt="Cover">
+    </div>
+    <div class="series-info">
+      <h1 class="series-title">Mera Jalwa Tumhara Karma</h1>
+      <div class="series-meta">
+        <p><strong>Status:</strong> Ongoing</p>
+        <p><strong>Genre:</strong> Romance, Drama, Mature</p>
+        <p><strong>Updated:</strong> Chapter 1</p>
+      </div>
+      <div class="series-synopsis">
+        <h3>Synopsis</h3>
+        <p>Ek ameer ladka aur middle-class ladki ki college love story jisme jalwa aur karma ka full drama hai. Bold scenes, emotional twists aur passion ka perfect mix!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapters">
+    <h2>Chapters</h2>
+    <div class="ch-list">
+      <a href="ch1.html">Chapter 1 - Pehli Mulakat</a>
+      <!-- Naye chapters yahan add karte reh -->
+    </div>
+  </div>
+</div>
+
+<script>
+function includeHTML(){var z,i,e,f,x;z=document.getElementsByTagName("*");for(i=0;i<z.length;i++){e=z[i];f=e.getAttribute("w3-include-html");if(f){x=new XMLHttpRequest();x.onreadystatechange=function(){if(this.readyState==4&&this.status==200){e.innerHTML=this.responseText;e.removeAttribute("w3-include-html");includeHTML();}};x.open("GET",f,true);x.send();}}}includeHTML();
+</script>
+</body>
+</html>
