@@ -1,34 +1,15 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mera Jalwa Tumhara Karma - Chapter 1</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 1</title>
 <style>
-body{margin:0;background:#000;color:#fff;font-family:Arial;}
+body{margin:0;background:#000;color:#fff;}
 img{width:100%;display:block;margin:5px 0;}
-.top-bar{background:#111;padding:15px;text-align:center;position:sticky;top:0;z-index:99;border-bottom:2px solid #ff2e63;}
-.top-bar select{background:#222;color:white;border:none;padding:10px 20px;border-radius:50px;font-size:1.1rem;}
-.next-btn{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#ff2e63;padding:16px 50px;border-radius:50px;color:white;font-size:1.4rem;z-index:99;box-shadow:0 8px 20px rgba(255,46,99,0.6);}
-</style>
-</head>
+.chap-title{background:#111;color:#ff2e63;padding:15px;text-align:center;position:sticky;top:82px;z-index:98;font-size:1.6rem;}
+.next-btn{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#ff2e63;padding:16px 60px;border-radius:50px;color:white;font-size:1.5rem;z-index:99;}
+</style></head><body>
+<div w3-include-html="../header.html"></div>
+<div class="chap-title">Chapter 1 - Mera Jalwa Tumhara Karma</div>
 
-<body>
-
-<div w3-include-html="../header.html">div>
-
-<div class="top-bar">
-  <select onchange="if(this.value) window.location=this.value">
-    <option>Chapter 1option>
-    <option value="ch2.html">Chapter 2option>
-    <option value="ch3.html">Chapter 3option>
-    <!-- Yahan jitne chapter hain utne add kar dena -->
-  select>
-div>
-
-<h1 style="text-align:center;color:#ff2e63;padding:20px;background:#000;position:sticky;top:60px;z-index:98;">Chapter 1 - Mera Jalwa Tumhara Karmah1>
-
-<!-- Chapter 1 ki saari images -->
 <img src="https://files.catbox.moe/db3sii.png">
 <img src="https://files.catbox.moe/53a9ya.png">
 <img src="https://files.catbox.moe/owja6d.png">
@@ -41,11 +22,6 @@ div>
 <img src="https://files.catbox.moe/lummls.png">
 <img src="https://files.catbox.moe/6nl8ic.png">
 
-<!-- Next Chapter Button -->
-<a href="ch2.html" class="next-btn">NEXT CHAPTER →a>
-
-<script>
-function includeHTML(){var z,i,elmt,file,xhttp;z=document.getElementsByTagName("*");for(i=0;i<z.length;i++){elmt=z[i];file=elmt.getAttribute("w3-include-html");if(file){xhttp=new XMLHttpRequest();xhttp.onreadystatechange=function(){if(this.readyState==4&&this.status==200){elmt.innerHTML=this.responseText;elmt.removeAttribute("w3-include-html");includeHTML();}};xhttp.open("GET",file,true);xhttp.send();return;}}}includeHTML();
-script>
-body>
-html>
+<a href="ch2.html" class="next-btn">NEXT CHAPTER →</a>
+<script>function includeHTML(){var z,i,e,f,x;z=document.getElementsByTagName("*");for(i=0;i<z.length;i++){e=z[i];f=e.getAttribute("w3-include-html");if(f){x=new XMLHttpRequest();x.onreadystatechange=function(){if(this.readyState==4&&this.status==200){e.innerHTML=this.responseText;e.removeAttribute("w3-include-html");includeHTML();}};x.open("GET",f,true);x.send();}}}includeHTML();</script>
+</body></html>
