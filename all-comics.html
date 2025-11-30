@@ -1,70 +1,70 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Comics - Comic Pur</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0a0a0a; color: #e0e0e0; font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; padding-top: 70px; }
-    .header { position: fixed; top: 0; left: 0; right: 0; background: #0d0d0d; z-index: 999; border-bottom: 2px solid #ff2e63; padding: 12px 20px; }
-    .header-inner { max-width: 1400px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
-    .logo { color: #ff2e63; font-size: 2.2rem; font-weight: bold; text-decoration: none; }
-    .search input { padding: 10px 20px; border-radius: 25px; border: none; background: #1a1a1a; color: white; width: 300px; }
-    .all-btn { background: #ff2e63; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; text-decoration: none; }
-    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-    h1 { text-align: center; color: #ff2e63; font-size: 3rem; margin: 40px 0; font-weight: bold; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
-    .card { position: relative; border-radius: 15px; overflow: hidden; background: #1a1a1a; box-shadow: 0 8px 25px rgba(0,0,0,0.5); transition: 0.3s; cursor: pointer; }
-    .card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(255,46,99,0.3); }
-    .card img { width: 100%; height: 280px; object-fit: cover; }
-    .card-info { padding: 15px; text-align: center; }
-    .card-title { font-size: 1.2rem; font-weight: bold; color: #fff; margin-bottom: 5px; }
-    .card-chap { color: #ff2e63; font-size: 1rem; }
-    @media (max-width: 768px) { .search input { width: 100%; } .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>All Comics - Comic Pur</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;padding-top:80px;}
+.header{position:fixed;top:0;left:0;right:0;background:#0d0d0d;z-index:9999;border-bottom:2px solid #ff2e63;padding:12px 16px;}
+.header-inner{max-width:1400px;margin:auto;display:flex;flex-direction:column;gap:10px;align-items:center;}
+.logo{color:#ff2e63;font-size:1.8rem;font-weight:900;text-decoration:none;}
+.search input{width:100%;max-width:500px;padding:14px 20px;border-radius:30px;background:#1a1a1a;border:none;color:white;font-size:1rem;}
+.all-btn{background:#ff2e63;color:white;padding:10px 20px;border-radius:25px;font-weight:bold;text-decoration:none;}
+.container{max-width:1400px;margin:0 auto;padding:20px;}
+h1{text-align:center;color:#ff2e63;font-size:2.4rem;margin:40px 0;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px;}
+.card{border-radius:12px;overflow:hidden;background:#1a1a1a;box-shadow:0 8px 25px rgba(0,0,0,0.6);}
+.card img{width:100%;height:210px;object-fit:cover;background:#222;}
+.info{padding:12px;text-align:center;}
+.title{font-size:0.98rem;font-weight:bold;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chap{color:#ff2e63;font-size:0.9rem;margin-top:4px;}
+@media(min-width:768px){
+  .header-inner{flex-direction:row;justify-content:space-between;}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:25px;}
+  .card img{height:300px;}
+}
+</style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-inner">
     <a href="/" class="logo">Comic Pur</a>
-    <input type="text" placeholder="Search comics..." oninput="searchNow(this.value)" class="search">
+    <input type="text" placeholder="Search comics..." oninput="searchNow(this.value)">
     <a href="all-comics.html" class="all-btn">All Comics</a>
   </div>
 </div>
 
 <div class="container">
   <h1>All Comics</h1>
-  <div id="comicGrid" class="grid"></div>
+  <div id="grid" class="grid"></div>
 </div>
 
 <script>
-fetch('data/comics.json')
-  .then(r => r.json())
-  .then(data => {
-    const grid = document.getElementById('comicGrid');
-    data.forEach(c => {
-      grid.innerHTML += `
-        <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
-          <img src="\( {c.cover}" alt=" \){c.title}">
-          <div class="card-info">
-            <div class="card-title">${c.title}</div>
-            <div class="card-chap">${c.latest}</div>
-          </div>
-        </div>`;
-    });
-  });
+// Yahan path '../data/comics.json' daala – isliye cover dikhega
+fetch('../data/comics.json')
+.then(r=>r.json())
+.then(d=>{
+  document.getElementById('grid').innerHTML = d.map(c=>`
+    <div class="card" onclick="location.href='../comics/${c.slug}/index.html'">
+      <img src="${c.cover}" loading="lazy">
+      <div class="info">
+        <div class="title">${c.title}</div>
+        <div class="chap">${c.latest}</div>
+      </div>
+    </div>`).join('');
+});
 
-function searchNow(q) {
-  q = q.trim().toLowerCase();
-  if (q.length < 2) return;
-  fetch('data/comics.json')
-    .then(r => r.json())
-    .then(data => {
-      const found = data.find(c => c.title.toLowerCase().includes(q));
-      if (found) location.href = `comics/${found.slug}/index.html`;
-    });
+function searchNow(q){
+  if(q.trim().length<2) return;
+  fetch('../data/comics.json')
+  .then(r=>r.json())
+  .then(d=>{
+    const f = d.find(c=>c.title.toLowerCase().includes(q.toLowerCase()));
+    if(f) location.href=`../comics/${f.slug}/index.html`;
+  });
 }
 </script>
 </body>
