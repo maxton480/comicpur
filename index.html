@@ -28,10 +28,7 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;overflow-
 .result-item:hover{background:#ff2e63;color:#000;}
 .result-item img{width:60px;height:80px;object-fit:cover;border-radius:8px;}
 .result-title{font-weight:bold;font-size:1.1rem;}
-@media(min-width:768px){
-  .grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:32px;}
-  .card img{height:340px;}
-}
+@media(min-width:768px){.grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:32px;}.card img{height:340px;}}
 </style>
 </head>
 <body>
@@ -57,28 +54,22 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;overflow-
 <script>
 let allComics = [];
 
-// Direct manual load (JSON fail hone pe bhi comic dikhegi)
-const manualComic = [{
+// Manual fallback comic
+const fallbackComic = [{
   title: "Mera Jalwa Tumhara Karma",
   slug: "mera-jalwa-tumhara-karma",
   cover: "https://files.catbox.moe/a5csgr.jpg",
   latest: "Chapter 1"
 }];
 
+// Load comics
 fetch('https://maxton480.github.io/comicpur/data/comics.json')
   .then(r => r.ok ? r.json() : Promise.reject())
-  .then(data => {
-    allComics = data;
-    renderGrid(data);
-  })
-  .catch(() => {
-    allComics = manualComic;
-    renderGrid(allComics);
-  });
+  .then(data => { allComics = data; renderGrid(data); })
+  .catch(() => { allComics = fallbackComic; renderGrid(fallbackComic); });
 
 function renderGrid(comics) {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = comics.map(c => `
+  document.getElementById('grid').innerHTML = comics.map(c => `
     <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
       <img src="\( {c.cover}" loading="lazy" alt=" \){c.title}" onerror="this.src='https://via.placeholder.com/300x400/222/666?text=No+Image'">
       <div class="info">
@@ -89,16 +80,46 @@ function renderGrid(comics) {
   `).join('');
 }
 
-// Search
+// Search with back button fix
 function openSearch() {
   document.getElementById('searchOverlay').style.display = 'flex';
   document.getElementById('searchInput').focus();
+  history.pushState({searchOpen: true}, '', location.href);
 }
+
 function closeSearch() {
   document.getElementById('searchOverlay').style.display = 'none';
   document.getElementById('searchInput').value = '';
   document.getElementById('results').innerHTML = '';
 }
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  const res = document.getElementById('results');
+  if (q.length < 2) { res.innerHTML = ''; return; }
+
+  const filtered = allComics.filter(c => c.title.toLowerCase().includes(q));
+  res.innerHTML = filtered.length ? filtered.map(c => `
+    <div class="result-item" onclick="location.href='comics/${c.slug}/index.html'">
+      <img src="${c.cover}" loading="lazy" onerror="this.src='https://via.placeholder.com/60x80/222/666?text=No+Img'">
+      <div><div class="result-title">\( {c.title}</div><small style="color:#ff2e63;"> \){c.latest}</small></div>
+    </div>
+  `).join('') : '<div style="text-align:center;padding:30px;color:#888;">Koi comic nahi mila</div>';
+});
+
+// Back button fix (phone + browser dono)
+window.addEventListener('popstate', e => {
+  if (document.getElementById('searchOverlay').style.display === 'flex') {
+    closeSearch();
+    history.pushState({searchOpen: true}, '', location.href);
+  }
+});
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeSearch(); });
+</script>
+
+</body>
+</html>}
 
 document.getElementById('searchInput').addEventListener('input', function(e) {
   const q = e.target.value.trim().toLowerCase();
