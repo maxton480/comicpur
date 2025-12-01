@@ -5,114 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Comic Pur</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}body{background:#000;color:#fff;font-family:system-ui,sans-serif;}
-.header{position:fixed;top:0;left:0;right:0;background:#111;z-index:999;border-bottom:2px solid #ff2e63;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#000;color:#fff;font-family:system-ui,sans-serif;background:#000;}
+.header{position:fixed;top:0;left:0;right:0;background:#111;z-index:9999;border-bottom:2px solid #ff2e63;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
 .logo{color:#ff2e63;font-size:2rem;font-weight:900;text-decoration:none;}
-.search-btn{background:#ff2e63;color:#000;padding:10px 20px;border-radius:30px;font-weight:bold;cursor:pointer;}
-.main{padding-top:80px;text-align:center;}
-h1{color:#ff2e63;margin:20px 0;font-size:2rem;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:20px;padding:20px;max-width:1400px;margin:auto;}
-.card{background:#111;border-radius:16px;overflow:hidden;box-shadow:0 8px 25px rgba(255,46,99,0.3);cursor:pointer;transition:0.3s;}
+.grid{max-width:1400px;margin:90px auto 20px;padding:0 15px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:22px;}
+.card{background:#111;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(255,46,99,0.2);cursor:pointer;transition:0.3s;}
 .card:active{transform:scale(0.96);}
-.card img{width:100%;height:240px;object-fit:cover;background:#222;}
-.title{padding:12px;font-weight:bold;font-size:1rem;text-align:center;}
-.chap{color:#ff2e63;font-size:0.9rem;}
+.card img{width:100%;height:240px;object-fit:cover;}
+.info{padding:12px;text-align:center;}
+.title{font-weight:bold;font-size:1rem;}
+.chap{color:#ff2e63;margin-top:5px;font-size:0.9rem;}
 @media(min-width:768px){.grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}.card img{height:320px;}}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <a href="/" class="logo">Comic Pur</a>
-  <div class="search-btn" onclick="openSearch()">Search</div>
+  <a href="https://maxton480.github.io/comicpur/" class="logo">Comic Pur</a>
 </div>
 
-<div class="main">
-  <h1>All Comics</h1>
-  <div class="grid" id="grid"></div>
+<div class="grid" id="grid">
+  <!-- Hardcoded comic — 100% dikhega -->
+  <div class="card" onclick="location.href='comics/mera-jalwa-tumhara-karma/index.html'">
+    <img src="https://files.catbox.moe/a5csgr.jpg" loading="lazy">
+    <div class="info">
+      <div class="title">Mera Jalwa Tumhara Karma</div>
+      <div class="chap">Chapter 1</div>
+    </div>
+  </div>
 </div>
-
-<script>
-// Hardcoded + fallback — cover 100% dikhega
-const comics = [{title:"Mera Jalwa Tumhara Karma",slug:"mera-jalwa-tumhara-karma",cover:"https://files.catbox.moe/a5csgr.jpg",latest:"Chapter 1"}];
-
-renderGrid(comics);
-fetch('data/comics.json').then(r=>r.ok?r.json():comics).then(d=>d.length&&renderGrid(d));
-
-function renderGrid(list){
-  document.getElementById('grid').innerHTML = list.map(c=>`
-    <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
-      <img src="${c.cover}" loading="lazy">
-      <div class="title">${c.title}</div>
-      <div class="chap">${c.latest}</div>
-    </div>
-  `).join('');
-}
-
-function openSearch(){alert("Search coming soon!");}
-</script>
-</body>
-</html>}
-
-document.getElementById('searchInput').addEventListener('input', function(e) {
-  const q = e.target.value.trim().toLowerCase();
-  const res = document.getElementById('results');
-  if (q.length < 2) { res.innerHTML = ''; return; }
-
-  const filtered = allComics.filter(c => c.title.toLowerCase().includes(q));
-  if (filtered.length === 0) {
-    res.innerHTML = '<div style="text-align:center;padding:30px;color:#888;">Koi comic nahi mila</div>';
-    return;
-  }
-
-  res.innerHTML = filtered.map(c => `
-    <div class="result-item" onclick="location.href='comics/${c.slug}/index.html'">
-      <img src="${c.cover}" loading="lazy" onerror="this.src='https://via.placeholder.com/60x80/222/666?text=No+Img'">
-      <div>
-        <div class="result-title">${c.title}</div>
-        <small style="color:#ff2e63;">${c.latest}</small>
-      </div>
-    </div>
-  `).join('');
-});
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
-
-// Back button fix
-window.addEventListener('popstate', () => {
-  if (document.getElementById('searchOverlay').style.display === 'flex') {
-    closeSearch();
-    history.pushState({search: true}, '', location.href);
-  }
-});
-</script>
-
-</body>
-</html>  const res = document.getElementById('results');
-  if (q.length < 2) return res.innerHTML = '';
-
-  const filtered = comics.filter(c => c.title.toLowerCase().includes(q));
-  res.innerHTML = filtered.length ? filtered.map(c => `
-    <div class="result-item" onclick="location.href='comics/${c.slug}/index.html'">
-      <img src="${c.cover}" loading="lazy">
-      <div>
-        <div class="result-title">${c.title}</div>
-        <small style="color:#ff2e63;">${c.latest}</small>
-      </div>
-    </div>
-  `).join('') : '<div style="text-align:center;padding:40px;color:#888;">Kuch nahi mila</div>';
-};
-
-// Back button perfect fix
-window.onpopstate = () => {
-  if (document.getElementById('searchOverlay').style.display === 'flex') {
-    closeSearch();
-    history.pushState({search:1}, '', '');
-  }
-};
-
-document.onkeydown = e => { if(e.key==='Escape') closeSearch(); };
-</script>
 
 </body>
 </html>
