@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Comic Pur</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;overflow-x:hidden;}
+.header{position:fixed;top:0;left:0;right:0;background:#0d0d0d;z-index:9999;border-bottom:2px solid #ff2e63;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;}
+.logo{color:#ff2e63;font-size:2rem;font-weight:900;text-decoration:none;}
+.search-icon{color:#ff2e63;font-size:1.8rem;cursor:pointer;}
+.main{padding-top:90px;padding:20px 16px 60px;text-align:center;}
+.main h1{color:#ff2e63;font-size:2.3rem;margin-bottom:40px;font-weight:900;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:24px;max-width:1400px;margin:0 auto;}
+.card{border-radius:16px;overflow:hidden;background:#1a1a1a;box-shadow:0 10px 30px rgba(0,0,0,0.7);transition:0.25s;cursor:pointer;}
+.card:active{transform:scale(0.96);}
+.card img{width:100%;height:240px;object-fit:cover;background:#222;}
+.info{padding:14px;text-align:center;}
+.title{font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chap{color:#ff2e63;margin-top:6px;font-size:0.9rem;}
+.search-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.98);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;}
+.search-box{width:100%;max-width:700px;position:relative;}
+.search-box input{width:100%;padding:20px 70px 20px 20px;font-size:1.5rem;background:#1a1a1a;border:none;border-radius:50px;color:#fff;outline:none;}
+.close-search{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:2.4rem;color:#ff2e63;cursor:pointer;}
+.results{margin-top:20px;background:#111;border-radius:15px;max-height:65vh;overflow-y:auto;padding:10px;}
+.result-item{display:flex;align-items:center;gap:15px;padding:14px;background:#1f1f1f;margin:8px 0;border-radius:12px;cursor:pointer;transition:0.2s;}
+.result-item:hover{background:#ff2e63;color:#000;}
+.result-item img{width:60px;height:80px;object-fit:cover;border-radius:8px;}
+@media(min-width:768px){.grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:32px;}.card img{height:340px;}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="/" class="logo">Comic Pur</a>
+  <div class="search-icon" onclick="openSearch()">Search</div>
+</div>
+
+<div class="main">
+  <h1>All Comics</h1>
+  <div id="grid" class="grid"></div>
+</div>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <input type="text" placeholder="Comic dhundho..." id="searchInput" autofocus>
+    <div class="close-search" onclick="closeSearch()">×</div>
+    <div class="results" id="results"></div>
+  </div>
+</div>
+
+<script>
+// Hardcoded data — yeh hamesha chalega, JSON fail ho ya na ho
+const comics = [
+  {
+    title: "Mera Jalwa Tumhara Karma",
+    slug: "mera-jalwa-tumhara-karma",
+    cover: "https://files.catbox.moe/a5csgr.jpg",
+    latest: "Chapter 1"
+  }
+  // Yahan nayi comics add karte rehna
+];
+
+// Pehle hardcoded data dikhao (0.1 sec mein load)
+renderGrid(comics);
+
+// Phir JSON se update try karo (future ke liye)
+fetch('data/comics.json')
+  .then(r => r.ok ? r.json() : comics)
+  .then(data => {
+    if (data.length > 0) renderGrid(data);
+  });
+
+function renderGrid(list) {
+  document.getElementById('grid').innerHTML = list.map(c => `
+    <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
+      <img src="\( {c.cover}" loading="lazy" alt=" \){c.title}">
+      <div class="info">
+        <div class="title">${c.title}</div>
+        <div class="chap">${c.latest}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Search
+function openSearch() {
+  document.getElementById('searchOverlay').style.display = 'flex';
+  document.getElementById('searchInput').focus();
+  history.pushState({search:1}, '', '');
+}
+function closeSearch() {
+  document.getElementById('searchOverlay').style.display = 'none';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('results').innerHTML = '';
+}
+
+document.getElementById('searchInput').oninput = function() => {
+  const q = this.value.trim().toLowerCase();
+  const res = document.getElementById('results');
+  if (q.length < 2) return res.innerHTML = '';
+
+  const filtered = comics.filter(c => c.title.toLowerCase().includes(q));
+  res.innerHTML = filtered.length ? filtered.map(c => `
+    <div class="result-item" onclick="location.href='comics/${c.slug}/index.html'">
+      <img src="${c.cover}" loading="lazy">
+      <div>
+        <div class="result-title">${c.title}</div>
+        <small style="color:#ff2e63;">${c.latest}</small>
+      </div>
+    </div>
+  `).join('') : '<div style="text-align:center;padding:40px;color:#888;">Kuch nahi mila</div>';
+};
+
+// Back button perfect fix
+window.onpopstate = () => {
+  if (document.getElementById('searchOverlay').style.display === 'flex') {
+    closeSearch();
+    history.pushState({search:1}, '', '');
+  }
+};
+
+document.onkeydown = e => { if(e.key==='Escape') closeSearch(); };
+</script>
+
+</body>
+</html>
