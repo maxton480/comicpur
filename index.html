@@ -90,10 +90,27 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
 });
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
-</script>
+<script>
+let allComics = [];
 
-</body>
-</html>
+// Load comics from JSON
+fetch('https://maxton480.github.io/comicpur/data/comics.json')
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(data => {
+    allComics = data;
+    renderGrid(data);
+  })
+  .catch(() => {
+    // Fallback if JSON fails
+    allComics = [{
+      title: "Mera Jalwa Tumhara Karma",
+      slug: "mera-jalwa-tumhara-karma",
+      cover: "https://files.catbox.moe/a5csgr.jpg",
+      latest: "Chapter 1"
+    }];
+    renderGrid(allComics);
+  });
+
 function renderGrid(comics) {
   document.getElementById('grid').innerHTML = comics.map(c => `
     <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
@@ -105,6 +122,42 @@ function renderGrid(comics) {
     </div>
   `).join('');
 }
+
+// Search functions
+function openSearch() {
+  document.getElementById('searchOverlay').style.display = 'flex';
+  document.getElementById('searchInput').focus();
+}
+function closeSearch() {
+  document.getElementById('searchOverlay').style.display = 'none';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('results').innerHTML = '';
+}
+
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  const q = e.target.value.trim().toLowerCase();
+  const res = document.getElementById('results');
+  if (q.length < 2) { res.innerHTML = ''; return; }
+
+  const filtered = allComics.filter(c => c.title.toLowerCase().includes(q));
+  if (filtered.length === 0) {
+    res.innerHTML = '<div style="text-align:center;padding:30px;color:#888;">Koi comic nahi mila</div>';
+    return;
+  }
+
+  res.innerHTML = filtered.map(c => `
+    <div class="result-item" onclick="location.href='comics/${c.slug}/index.html'">
+      <img src="${c.cover}" loading="lazy" onerror="this.src='https://via.placeholder.com/60x80/222/666?text=No+Img'">
+      <div>
+        <div class="result-title">${c.title}</div>
+        <small style="color:#ff2e63;">${c.latest}</small>
+      </div>
+    </div>
+  `).join('');
+});
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
+</script>
 
 // Search functions
 function openSearch() {
