@@ -15,6 +15,7 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;overflow-
 .logo{color:#ff2e63;font-size:2rem;font-weight:900;text-decoration:none;}
 .search-icon{color:#ff2e63;font-size:1.8rem;cursor:pointer;}
 
+/* Search Overlay */
 .search-overlay{
   position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.98);z-index:99999;
   display:none;align-items:center;justify-content:center;padding:20px;
@@ -39,6 +40,7 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;overflow-
 .result-item img{width:60px;height:80px;object-fit:cover;border-radius:8px;}
 .result-title{font-weight:bold;font-size:1.1rem;}
 
+/* Main Content */
 .main{padding-top:90px;padding:20px 16px 60px;text-align:center;}
 .main h1{color:#ff2e63;font-size:2.3rem;margin-bottom:40px;font-weight:900;}
 
@@ -66,7 +68,7 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;overflow-
 
 <div class="header">
   <a href="https://maxton480.github.io/comicpur/" class="logo">Comic Pur</a>
-  <div class="search-icon" onclick="openSearch()">Search</div>
+  <div class="search-icon" onclick="openSearch()">🔍</div>
 </div>
 
 <div class="main">
@@ -74,6 +76,7 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;overflow-
   <div id="grid" class="grid"></div>
 </div>
 
+<!-- Search Overlay -->
 <div class="search-overlay" id="searchOverlay">
   <div class="search-box">
     <input type="text" placeholder="Comic dhundho..." id="searchInput" autofocus>
@@ -85,26 +88,73 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:system-ui,sans-serif;overflow-
 <script>
 let allComics = [];
 
-// Yeh line fix ki — ab 100% load hoga
+// Full URL se load – 100% working
 const JSON_URL = 'https://maxton480.github.io/comicpur/data/comics.json';
 
 fetch(JSON_URL)
   .then(r => {
-    if (!r.ok) throw new Error('JSON not found');
+    if(!r.ok) throw new Error('JSON not found');
     return r.json();
   })
   .then(data => {
     allComics = data;
     renderGrid(data);
-    console.log('Comics loaded:', data.length);
   })
   .catch(err => {
-    console.error('Load fail:', err);
-    document.getElementById('grid').innerHTML = 
-      '<p style="color:#ff2e63;padding:50px;font-size:1.2rem;">Comics load nahi hue!<br>Refresh karo ya admin ko bol do 😅</p>';
+    console.error('Load error:', err);
+    document.getElementById('grid').innerHTML = '<p style="color:#ff2e63;padding:50px;font-size:1.2rem;">Comics load nahi hue! Refresh karo 😅</p>';
   });
 
 function renderGrid(comics) {
+  document.getElementById('grid').innerHTML = comics.map(c => `
+    <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
+      <img src="\( {c.cover}" loading="lazy" alt=" \){c.title}" onerror="this.src='https://via.placeholder.com/300x400/222/666?text=No+Image'">
+      <div class="info">
+        <div class="title">${c.title}</div>
+        <div class="chap">${c.latest}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Search functions
+function openSearch() {
+  document.getElementById('searchOverlay').style.display = 'flex';
+  document.getElementById('searchInput').focus();
+}
+function closeSearch() {
+  document.getElementById('searchOverlay').style.display = 'none';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('results').innerHTML = '';
+}
+
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  const q = e.target.value.trim().toLowerCase();
+  const res = document.getElementById('results');
+  if (q.length < 2) { res.innerHTML = ''; return; }
+
+  const filtered = allComics.filter(c => c.title.toLowerCase().includes(q));
+  if (filtered.length === 0) {
+    res.innerHTML = '<div style="text-align:center;padding:30px;color:#888;">Koi result nahi mila</div>';
+    return;
+  }
+
+  res.innerHTML = filtered.map(c => `
+    <div class="result-item" onclick="location.href='comics/${c.slug}/index.html'">
+      <img src="${c.cover}" loading="lazy" onerror="this.src='https://via.placeholder.com/60x80/222/666?text=No+Img'">
+      <div>
+        <div class="result-title">${c.title}</div>
+        <small style="color:#ff2e63;">${c.latest}</small>
+      </div>
+    </div>
+  `).join('');
+});
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeSearch(); });
+</script>
+
+</body>
+</html>function renderGrid(comics) {
   document.getElementById('grid').innerHTML = comics.map(c => `
     <div class="card" onclick="location.href='comics/${c.slug}/index.html'">
       <img src="\( {c.cover}" loading="lazy" alt=" \){c.title}">
