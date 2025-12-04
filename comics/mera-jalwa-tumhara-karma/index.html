@@ -1,30 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mera Jalwa Tumhara Karma</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Mera Jalwa Tumhara Karma - Comic Pur</title>
 <style>
-body{background:#000;color:#fff;margin:0;font-family:system-ui;text-align:center;padding-top:80px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#000;color:#fff;font-family:system-ui;}
 .header{position:fixed;top:0;left:0;right:0;background:#111;padding:15px 20px;border-bottom:2px solid #ff2e63;display:flex;justify-content:space-between;align-items:center;z-index:999;}
 .logo{color:#ff2e63;font-size:1.9rem;font-weight:900;cursor:pointer;}
-.search{color:#ff2e63;font-size:1.8rem;cursor:pointer;}
-.back{background:#ff2e63;color:#000;padding:10px 20px;border-radius:30px;font-weight:bold;cursor:pointer;}
-img{max-width:90%;border-radius:15px;margin:20px auto;}
-.btn{display:block;background:#ff2e63;color:#000;padding:16px;margin:30px auto 20px;border-radius:30px;font-weight:bold;text-decoration:none;max-width:280px;font-size:1.1rem;}
+.back{background:#ff2e63;color:#000;padding:10px 22px;border-radius:30px;font-weight:bold;cursor:pointer;}
+.content{padding-top:80px;padding:20px;}
+.cover{max-width:100%;border-radius:12px;margin-bottom:20px;}
+h1{color:#ff2e63;font-size:2rem;margin:15px 0;}
+.chapters{margin-top:30px;}
+.chapter-btn{display:block;background:#222;margin:12px 0;padding:18px;border-radius:12px;text-align:center;color:#fff;font-size:1.3rem;text-decoration:none;border:1px solid #ff2e63;}
+.chapter-btn:hover{background:#ff2e63;color:#000;}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="logo" onclick="location.href='../../index.html'">Comic Pur</div>
-  <div class="search" onclick="location.href='../../search.html'">Search</div>
   <div class="back" onclick="history.back()">Back</div>
 </div>
 
-<img src="https://files.catbox.moe/a5csgr.jpg">
-<h1>Mera Jalwa Tumhara Karma</h1>
-<a href="ch1.html" class="btn">Read Chapter 1</a>
+<div class="content">
+  <img src="https://files.catbox.moe/YOUR_COVER_LINK.jpg" class="cover" alt="Cover">
+  <h1>Mera Jalwa Tumhara Karma</h1>
+  <p>Latest Hindi Adult Comic • Daily Updates</p>
+
+  <div class="chapters">
+    <a href="ch5.html" class="chapter-btn">Chapter 5 - New 🔥</a>
+    <a href="ch4.html" class="chapter-btn">Chapter 4</a>
+    <a href="ch3.html" class="chapter-btn">Chapter 3</a>
+    <a href="ch2.html" class="chapter-btn">Chapter 2</a>
+    <a href="ch1.html" class="chapter-btn">Chapter 1</a>
+  </div>
+</div>
 
 </body>
 </html>
