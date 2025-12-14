@@ -1,54 +1,113 @@
-<!DOCTYPE html>
-<html lang="hi">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta name="6a97888e-site-verification" content="dd8d78da712e80586699384a365fd06f">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Comic Pur</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#000;color:#fff;font-family:system-ui,sans-serif;}
-.header{position:fixed;top:0;left:0;right:0;background:#111;z-index:9999;border-bottom:2px solid #ff2e63;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;}
-.logo{color:#ff2e63;font-size:2rem;font-weight:900;text-decoration:none;}
-.search{color:#ff2e63;font-size:1.8rem;cursor:pointer;}
-.grid{max-width:1400px;margin:90px auto 20px;padding:0 15px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:22px;}
-.card{background:#111;border-radius:16px;overflow:hidden;cursor:pointer;box-shadow:0 8px 30px rgba(255,46,99,0.2);transition:0.3s;}
-.card:active{transform:scale(0.96);}
-.card img{width:100%;height:240px;object-fit:cover;background:#222;}
-.info{padding:12px;text-align:center;}
-.title{font-weight:bold;font-size:1rem;}
-.chap{color:#ff2e63;margin-top:5px;}
-@media(min-width:768px){.grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}.card img{height:320px;}}
-</style>
+  <meta charset="UTF-8" />
+  <title>Webtoon Image Combiner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .box {
+      background: #020617;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    input, button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    #log {
+      font-size: 12px;
+      margin-top: 10px;
+      color: #93c5fd;
+    }
+  </style>
 </head>
-<body>
+<body><h1>Webtoon Bulk Image Combiner (No Quality Loss)</h1><div class="box">
+  <label>Select Images (Bulk Upload)</label>
+  <input type="file" id="images" multiple accept="image/*" />
+</div><div class="box">
+  <label>Images per Output (Calculator)</label>
+  <input type="number" id="perOutput" value="3" min="1" />
+  <label>Total Outputs Required</label>
+  <input type="number" id="totalOutputs" value="1" min="1" />
+</div><div class="box">
+  <button onclick="processImages()">Generate & Download All Outputs</button>
+  <div id="log"></div>
+</div><script>
+async function processImages() {
+  const files = [...document.getElementById('images').files];
+  const perOutput = parseInt(document.getElementById('perOutput').value);
+  const totalOutputs = parseInt(document.getElementById('totalOutputs').value);
+  const log = document.getElementById('log');
 
-<div class="header">
-  <div class="logo">Comic Pur</div>
-  <div class="search" onclick="location.href='search.html'">Search</div>
-</div>
+  if (files.length === 0) {
+    alert('Please upload images');
+    return;
+  }
 
-<div class="grid">
-  <!-- Mera Jalwa Tumhara Karma -->
-  <div class="card" onclick="location.href='comics/mera-jalwa-tumhara-karma/index.html'">
-    <img src="https://files.catbox.moe/a5csgr.jpg" loading="lazy">
-    <div class="info">
-      <div class="title">Mera Jalwa Tumhara Karma</div>
-      <div class="chap">Chapter 6</div>
-    </div>
-  </div>
+  const zip = new JSZip();
+  let index = 0;
 
-  <!-- Rooftops -->
-  <div class="card" onclick="location.href='comics/rooftops/index.html'">
-    <img src="https://files.catbox.moe/yiexty.jpg" loading="lazy">
-    <div class="info">
-      <div class="title">Rooftops</div>
-      <div class="chap">Chapter 2</div>
-    </div>
-  </div>
+  for (let o = 1; o <= totalOutputs; o++) {
+    const slice = files.slice(index, index + perOutput);
+    if (slice.length === 0) break;
 
-  <!-- Aur nayi comics yahan add karte rehna -->
-</div>
+    const images = await Promise.all(slice.map(loadImage));
+    const width = Math.max(...images.map(i => i.width));
+    const height = images.reduce((sum, i) => sum + i.height, 0);
 
-</body>
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+
+    let y = 0;
+    images.forEach(img => {
+      ctx.drawImage(img, 0, y);
+      y += img.height;
+    });
+
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png', 1.0));
+    zip.file(`output_${o}.png`, blob);
+
+    index += perOutput;
+    log.innerText = `Created ${o} output(s)...`;
+  }
+
+  const content = await zip.generateAsync({ type: 'blob' });
+  saveAs(content, 'webtoon_outputs.zip');
+  log.innerText = 'All outputs downloaded successfully.';
+}
+
+function loadImage(file) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.src = URL.createObjectURL(file);
+  });
+}
+</script></body>
 </html>
