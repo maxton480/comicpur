@@ -37,8 +37,11 @@ async function autoCombine(){
 
   for(let i=0;i<files.length;i+=combine){
     const group=files.slice(i,i+combine)
+
+    // Case: single leftover image (no combine)
     if(group.length===1){
-      zip.file(`output_${outputIndex}.png`,group[0])
+      const name=`output_${String(outputIndex).padStart(3,'0')}.png`
+      zip.file(name,group[0])
       outputIndex++
       continue
     }
@@ -56,7 +59,8 @@ async function autoCombine(){
     imgs.forEach(img=>{ctx.drawImage(img,0,y);y+=img.height})
 
     const blob=await new Promise(res=>canvas.toBlob(res,'image/webp',0.9))
-    zip.file(`output_${outputIndex}.webp`,blob)
+    const name=`output_${String(outputIndex).padStart(3,'0')}.webp`
+    zip.file(name,blob)
     outputIndex++
     log.innerText=`Generated ${outputIndex-1} outputs...`
   }
@@ -68,18 +72,6 @@ async function autoCombine(){
 
 function loadImage(file){
   return new Promise(res=>{const img=new Image();img.onload=()=>res(img);img.src=URL.createObjectURL(file)})
-}
-</script></body>
-</html>  saveAs(content, 'webtoon_outputs.zip');
-  log.innerText = 'All outputs downloaded successfully.';
-}
-
-function loadImage(file) {
-  return new Promise(resolve => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.src = URL.createObjectURL(file);
-  });
 }
 </script></body>
 </html>
