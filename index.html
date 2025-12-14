@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Webtoon Mobile Translator</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui, sans-serif;background:#0f0f0f;color:#fff}
+    header{position:sticky;top:0;z-index:20;background:#000;padding:8px;display:flex;gap:6px;flex-wrap:wrap}
+    input,button{padding:8px;border-radius:8px;border:none;font-size:14px}
+    button{background:#222;color:#fff}
+    #container{max-width:480px;margin:auto}
+    .page{position:relative}
+    canvas{width:100%;display:block}
+    .overlay-text{position:absolute;left:10px;top:10px;color:#fff;background:rgba(0,0,0,.6);padding:6px 8px;border-radius:6px;min-width:40px}
+    .overlay-img{position:absolute;left:20px;top:80px;width:120px;border:2px dashed #fff}
+  </style>
+</head>
+<body>
+<header>
+  <input type="file" id="upload" multiple accept="image/*" />
+  <input type="file" id="overlayImg" accept="image/*" />
+  <button onclick="addText()">Add Text</button>
+  <button onclick="downloadPDF()">PDF</button>
+</header>
+<div id="container"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+let pages = JSON.parse(localStorage.getItem('pages')||'[]');
+const container=document.getElementById('container');
+
+function save(){localStorage.setItem('pages',JSON.stringify(pages));}
+
+function render(){
+  container.innerHTML='';
+  pages.forEach((p,idx)=>{
+    const wrap=document.createElement('div');wrap.className='page';
+    const c=document.createElement('canvas');
+    const img=new Image();
+    img.onload=()=>{
+      c.width=img.width;c.height=img.height;
+      c.getContext('2d').drawImage(img,0,0);
+    };
+    img.src=p.src;
+    wrap.appendChild(c);
+
+    p.texts.forEach(t=>wrap.appendChild(makeText(t)));
+    p.overlays.forEach(o=>wrap.appendChild(makeOverlay(o)));
+
+    container.appendChild(wrap);
+  });
+}
+
+function makeText(t){
+  const d=document.createElement('div');d.className='overlay-text';
+  d.contentEditable=true;d.innerText=t.text;
+  d.style.left=t.x+'px';d.style.top=t.y+'px';
+  drag(d,(x,y)=>{t.x=x;t.y=y;save();});
+  d.oninput=()=>{t.text=d.innerText;save();};
+  return d;
+}
+
+function makeOverlay(o){
+  const i=document.createElement('img');i.className='overlay-img';i.src=o.src;
+  i.style.left=o.x+'px';i.style.top=o.y+'px';
+  drag(i,(x,y)=>{o.x=x;o.y=y;save();});
+  return i;
+}
+
+function drag(el,cb){
+  let dx,dy;
+  el.onpointerdown=e=>{dx=e.offsetX;dy=e.offsetY;el.setPointerCapture(e.pointerId);};
+  el.onpointermove=e=>{if(e.pressure){cb(e.clientX-el.parentElement.offsetLeft-dx,e.clientY-el.parentElement.offsetTop-dy);el.style.left=cb.x;}};
+  el.onpointerup=e=>el.releasePointerCapture(e.pointerId);
+}
+
+upload.onchange=e=>{
+  [...e.target.files].forEach(f=>{
+    const r=new FileReader();
+    r.onload=()=>{pages.push({src:r.result,texts:[],overlays:[]});save();render();};
+    r.readAsDataURL(f);
+  });
+};
+
+overlayImg.onchange=e=>{
+  const f=e.target.files[0];if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{pages[pages.length-1].overlays.push({src:r.result,x:20,y:80});save();render();};
+  r.readAsDataURL(f);
+};
+
+function addText(){pages[pages.length-1].texts.push({text:'Tap to edit',x:10,y:10});save();render();}
+
+async function downloadPDF(){
+  const {jsPDF}=window.jspdf;const pdf=new jsPDF('p','pt','a4');
+  document.querySelectorAll('.page').forEach((p,i)=>{
+    html2canvas(p).then(canvas=>{
+      const img=canvas.toDataURL('image/jpeg',1);
+      if(i>0) pdf.addPage();
+      pdf.addImage(img,'JPEG',0,0,595,842);
+      if(i===document.querySelectorAll('.page').length-1) pdf.save('webtoon.pdf');
+    });
+  });
+}
+
+render();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>
