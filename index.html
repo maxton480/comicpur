@@ -1,143 +1,90 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Webtoon Image Combiner</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
-  <style>
-    body{
-      font-family:Arial,sans-serif;
-      background:#0f172a;
-      color:#e5e7eb;
-      padding:20px
-    }
-    h1{font-size:22px}
-    .box{
-      background:#020617;
-      padding:15px;
-      border-radius:10px;
-      margin-bottom:15px
-    }
-    input,button{
-      width:100%;
-      margin-top:10px;
-      padding:10px;
-      border-radius:8px;
-      border:none;
-      font-size:14px
-    }
-    button{
-      background:#2563eb;
-      color:#fff;
-      cursor:pointer
-    }
-    button:hover{background:#1d4ed8}
-    #log{
-      font-size:13px;
-      margin-top:10px;
-      color:#93c5fd
-    }
-  </style>
-</head>
-<body>
-
-<h1>Webtoon Image Combiner</h1>
-
-<div class="box">
-  <label>Upload Images (Bulk)</label>
-  <input type="file" id="images" multiple accept="image/*">
-</div>
-
-<div class="box">
-  <label>Images Per Output</label>
-  <input type="number" id="combineCount" value="3" min="1">
-</div>
-
-<div class="box">
-  <label>Starting Number (1 = 001, 31 = 031)</label>
-  <input type="number" id="startIndex" value="1" min="1">
-</div>
-
-<div class="box">
-  <button onclick="combineImages()">Combine & Download ZIP</button>
-  <div id="log"></div>
-</div>
-
-<script>
-async function combineImages(){
-  const files = [...document.getElementById('images').files];
-  const combine = parseInt(document.getElementById('combineCount').value);
-  const startIndex = parseInt(document.getElementById('startIndex').value);
-  const log = document.getElementById('log');
-
-  if(!files.length || combine < 1){
-    alert('Upload images and set combine count');
-    return;
-  }
-
-  const zip = new JSZip();
-  let outputIndex = startIndex;
-  let i = 0;
-
-  while(i < files.length){
-    const group = files.slice(i, i + combine);
-
-    // leftover images (less than combine count)
-    if(group.length < combine){
-      for(const file of group){
-        const name = `${String(outputIndex).padStart(3,'0')}.webp`;
-        zip.file(name, file);
-        outputIndex++;
-      }
-      i += group.length;
-      continue;
-    }
-
-    const imgs = await Promise.all(group.map(loadImage));
-    const width = Math.max(...imgs.map(img => img.width));
-    const height = imgs.reduce((sum, img) => sum + img.height, 0);
-
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
-
-    let y = 0;
-    imgs.forEach(img => {
-      ctx.drawImage(img, 0, y);
-      y += img.height;
-    });
-
-    const blob = await new Promise(res =>
-      canvas.toBlob(res, 'image/webp', 0.9)
-    );
-
-    const name = `${String(outputIndex).padStart(3,'0')}.webp`;
-    zip.file(name, blob);
-
-    outputIndex++;
-    i += combine;
-    log.innerText = `Generated ${outputIndex - startIndex} images...`;
-  }
-
-  const content = await zip.generateAsync({type:'blob'});
-  saveAs(content, 'combined_images.zip');
-  log.innerText = 'Done!';
-}
-
-function loadImage(file){
-  return new Promise(res => {
-    const img = new Image();
-    img.onload = () => res(img);
-    img.src = URL.createObjectURL(file);
-  });
-}
-</script>
-
-</body>
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+  <meta charset="UTF-8">  
+  <title>Webtoon Image Combiner</title>  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">    <!-- Libraries -->    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>    <style>  
+    body{font-family:Arial,sans-serif;background:#0f172a;color:#e5e7eb;padding:20px}  
+    h1{font-size:22px}  
+    .box{background:#020617;padding:15px;border-radius:10px;margin-bottom:15px}  
+    input,button{width:100%;margin-top:10px;padding:10px;border-radius:8px;border:none;font-size:14px}  
+    button{background:#2563eb;color:#fff;cursor:pointer}  
+    button:hover{background:#1d4ed8}  
+    #log{font-size:13px;margin-top:10px;color:#93c5fd}  
+  </style>  </head>  
+<body>  <h1>Webtoon Image Combiner</h1>  <div class="box">  
+  <label>Upload Images (Bulk)</label>  
+  <input type="file" id="images" multiple accept="image/*">  
+</div>  <div class="box">  
+  <label>Images Per Output</label>  
+  <input type="number" id="combineCount" value="3" min="1">  
+</div>  <div class="box">  
+  <label>Starting Number (1 = 001, 31 = 031)</label>  
+  <input type="number" id="startIndex" value="1" min="1">  
+</div>  <div class="box">  
+  <button onclick="combineImages()">Combine & Download ZIP</button>  
+  <div id="log"></div>  
+</div>  <script>  
+async function combineImages(){  
+  const files=[...document.getElementById('images').files];  
+  const combine=parseInt(document.getElementById('combineCount').value);  
+  const startIndex=parseInt(document.getElementById('startIndex').value);  
+  const log=document.getElementById('log');  
+  
+  if(!files.length||combine<1){  
+    alert('Upload images and set combine count');  
+    return;  
+  }  
+  
+  const zip=new JSZip();  
+  let outputIndex=startIndex;  
+  let i=0;  
+  
+  while(i<files.length){  
+    const group=files.slice(i,i+combine);  
+  
+    // single leftover image  
+    if(group.length===1){  
+      const name=`${String(outputIndex).padStart(3,'0')}.webp`;  
+      zip.file(name,group[0]);  
+      outputIndex++;  
+      break;  
+    }  
+  
+    const imgs=await Promise.all(group.map(loadImage));  
+    const width=Math.max(...imgs.map(img=>img.width));  
+    const height=imgs.reduce((s,img)=>s+img.height,0);  
+  
+    const canvas=document.createElement('canvas');  
+    canvas.width=width;  
+    canvas.height=height;  
+    const ctx=canvas.getContext('2d');  
+  
+    let y=0;  
+    imgs.forEach(img=>{  
+      ctx.drawImage(img,0,y);  
+      y+=img.height;  
+    });  
+  
+    const blob=await new Promise(res=>canvas.toBlob(res,'image/webp',0.9));  
+    const name=`${String(outputIndex).padStart(3,'0')}.webp`;  
+    zip.file(name,blob);  
+  
+    outputIndex++;  
+    i+=combine;  
+    log.innerText=`Generated ${outputIndex-startIndex} images...`;  
+  }  
+  
+  const content=await zip.generateAsync({type:'blob'});  
+  saveAs(content,'combined_images.zip');  
+  log.innerText='Done!';  
+}  
+  
+function loadImage(file){  
+  return new Promise(res=>{  
+    const img=new Image();  
+    img.onload=()=>res(img);  
+    img.src=URL.createObjectURL(file);  
+  });  
+}  
+</script>  </body>  
 </html>
